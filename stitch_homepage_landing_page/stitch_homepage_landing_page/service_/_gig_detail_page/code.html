@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Service Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 24px;
+        }
+        /* Hide scrollbar for carousel */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative min-h-screen w-full flex-col pb-28">
+<!-- Top App Bar -->
+<div class="sticky top-0 z-20 flex items-center bg-background-light/80 dark:bg-background-dark/80 p-4 backdrop-blur-sm justify-between">
+<div class="flex size-10 shrink-0 items-center justify-center">
+<span class="material-symbols-outlined text-gray-800 dark:text-white">arrow_back</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center text-gray-900 dark:text-white">Service Details</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 bg-transparent text-gray-800 dark:text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+<!-- Carousel -->
+<div class="flex overflow-x-auto no-scrollbar snap-x snap-mandatory">
+<div class="flex items-stretch p-4 gap-3">
+<div class="flex h-full w-80 flex-1 flex-col gap-4 rounded-lg min-w-60 snap-center shrink-0">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex flex-col" data-alt="Abstract gradient of blue and purple for a modern logo design portfolio piece" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCeRUrrcbUTKpftu5tEdKLao1Pqu9VjR0CJBO30rvAiXgietTjBuAdbV60HHkleN9HEQQQc7iAqt1I8gYxZ9StKVIx7q7jmYY5yrPg8IgK_rXLWCS2zXEwcAFY24cvQTkgqA1NeyHnKs6BEeKwliGZXcz6ed9w_Iw-niWdKgPkjwSnimqxFcA-JjxHTKDjJwspJ8eF2zxnwoRHb3edEXh0Yoli3eaj4ZTaWqdTXyHFuKz_PQvvph6bgOrhWZZlo7mguQ31IDzhSKrIv");'></div>
+</div>
+<div class="flex h-full w-80 flex-1 flex-col gap-4 rounded-lg min-w-60 snap-center shrink-0">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex flex-col" data-alt="A sleek black and white branding design on business cards" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDJuYBfllLG8dAHDTBcy33DO37zWuvRF_Kk9CdqBqdo0Da6tFheoFBhbk0wdYn6pyYoT3hPFzJfepS6zU3veq07LTIuYbwGsaqh4Q5Tr4AW_vpqVGj3xQT9aE4gI3UBnCRyAcYKFBqT0bn9Jh95KxQVKkgp0BkPYeKJIiTtWuOd13OarWdElBhHKu2uPSNMWWaQriZZ8aUFyiCqFBu_IxXX9qYrvOQmYdhQYiK2aVB-Ac4CZlARiFsOmICCe3ueihTt6h-A9J2rGtJa");'></div>
+</div>
+<div class="flex h-full w-80 flex-1 flex-col gap-4 rounded-lg min-w-60 snap-center shrink-0">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex flex-col" data-alt="Creative and colorful logo concepts on a sketchbook" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAhyumpoI6EdhMDf6exDYvtHcLXtng3zZVXdX5MWgBhp4pz6xFFIZ8KwJM17o5rmwi7gOX3yfoXVi3ArnCebdBTQ0IeuQ6v7ioWmCFa3z0uwUJk1bqfU05YQIEv-IlQMfsY9Vv0pziNnIRIYHb8pULwnV4iCEHgGFUGTS9j8OgEfELnskcNPMqvtjAvdlsDNXrN7n_tJJ4ccn3Mcz0gAlAoOP5I3AgzSTmjTDgWeMITsSbuTsyAld9xP9qsZ1bkL6kgpCKXXLZckJL0");'></div>
+</div>
+</div>
+</div>
+<div class="flex justify-center items-center gap-2 pb-4">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+</div>
+<!-- Headline & User Info -->
+<div class="px-4">
+<h1 class="text-gray-900 dark:text-white tracking-tight text-2xl font-bold leading-tight">I will design a professional modern logo for your business</h1>
+<p class="text-base text-gray-500 dark:text-gray-400 mt-1">Graphics &amp; Design &gt; Logo Design</p>
+</div>
+<div class="flex items-center gap-4 bg-background-light dark:bg-background-dark px-4 py-4 my-2">
+<div class="flex items-center gap-4 flex-1">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12" data-alt="Profile picture of John Doe" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBzjT-MDN7wLGtuj2w2nfoUKY0H0QA10wvJ8-cSpxsIL7lWqIR_ASAugZ02mcrJ2IQRNajDpjgSPiIJ8dj8ITNlLunO29LpOwoW6nImefNLQ11DpoWOC2kU1h6ZlHLnccw8NwbE-AEOZ1tczACfjK1i2FpzXWD8elR304wGgTcV-MQEEfzVn3MeJ0dZRS6czlYvVBQNjDo5ofeaUpOqvu4oX1dpmAhvsn1Jj96__XR7_gVq3KM2w1MUdwmnXjniukaylp3MTjvdok7t");'></div>
+<div>
+<p class="text-gray-900 dark:text-white text-base font-semibold leading-normal">John Doe</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm">Top Rated Seller</p>
+</div>
+</div>
+<div class="shrink-0 flex items-center gap-1">
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<p class="text-gray-900 dark:text-white text-base font-bold leading-normal">4.9</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm">(231 reviews)</p>
+</div>
+</div>
+<!-- Body Text -->
+<p class="text-gray-600 dark:text-gray-300 text-base font-normal leading-relaxed pb-3 pt-1 px-4">Get a stunning, professional logo that perfectly represents your brand. I specialize in modern, minimalist, and memorable designs to help your business stand out.</p>
+<!-- Pricing Table -->
+<div class="overflow-x-auto no-scrollbar snap-x snap-mandatory pt-4">
+<div class="flex gap-3 px-4 w-max pb-6">
+<!-- Basic Tier -->
+<div class="border border-primary/30 bg-primary/10 dark:bg-primary/20 p-4 rounded-xl w-72 flex flex-col shrink-0 snap-center">
+<h3 class="text-lg font-bold text-gray-900 dark:text-white">Basic</h3>
+<p class="text-2xl font-bold text-gray-900 dark:text-white my-2">$50</p>
+<p class="text-sm text-gray-600 dark:text-gray-400 min-h-12">2 initial concepts in high resolution JPG &amp; transparent PNG.</p>
+<ul class="space-y-3 mt-4 text-sm flex-1">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500">check_circle</span> <span class="text-gray-700 dark:text-gray-300">2 Logo Concepts</span></li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500">check_circle</span> <span class="text-gray-700 dark:text-gray-300">3 Revisions</span></li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500">check_circle</span> <span class="text-gray-700 dark:text-gray-300">3 Days Delivery</span></li>
+<li class="flex items-center gap-2 text-gray-400 dark:text-gray-500"><span class="material-symbols-outlined">cancel</span> <span>Source File</span></li>
+</ul>
+<button class="mt-6 w-full text-white bg-primary font-bold py-3 rounded-lg">Select Basic</button>
+</div>
+<!-- Standard Tier -->
+<div class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/20 p-4 rounded-xl w-72 flex flex-col shrink-0 snap-center">
+<h3 class="text-lg font-bold text-gray-900 dark:text-white">Standard</h3>
+<p class="text-2xl font-bold text-gray-900 dark:text-white my-2">$150</p>
+<p class="text-sm text-gray-600 dark:text-gray-400 min-h-12">3 concepts + source files and vector files for web &amp; print.</p>
+<ul class="space-y-3 mt-4 text-sm flex-1">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500">check_circle</span> <span class="text-gray-700 dark:text-gray-300">3 Logo Concepts</span></li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500">check_circle</span> <span class="text-gray-700 dark:text-gray-300">5 Revisions</span></li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500">check_circle</span> <span class="text-gray-700 dark:text-gray-300">2 Days Delivery</span></li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500">check_circle</span> <span class="text-gray-700 dark:text-gray-300">Source File</span></li>
+</ul>
+<button class="mt-6 w-full text-primary border border-primary font-bold py-3 rounded-lg">Select Standard</button>
+</div>
+<!-- Premium Tier -->
+<div class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/20 p-4 rounded-xl w-72 flex flex-col shrink-0 snap-center">
+<h3 class="text-lg font-bold text-gray-900 dark:text-white">Premium</h3>
+<p class="text-2xl font-bold text-gray-900 dark:text-white my-2">$300</p>
+<p class="text-sm text-gray-600 dark:text-gray-400 min-h-12">5 premium concepts + full branding kit and VIP support.</p>
+<ul class="space-y-3 mt-4 text-sm flex-1">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500">check_circle</span> <span class="text-gray-700 dark:text-gray-300">5 Logo Concepts</span></li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500">check_circle</span> <span class="text-gray-700 dark:text-gray-300">Unlimited Revisions</span></li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500">check_circle</span> <span class="text-gray-700 dark:text-gray-300">1 Day Delivery</span></li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500">check_circle</span> <span class="text-gray-700 dark:text-gray-300">Source File &amp; Brand Guide</span></li>
+</ul>
+<button class="mt-6 w-full text-primary border border-primary font-bold py-3 rounded-lg">Select Premium</button>
+</div>
+</div>
+</div>
+<!-- Add-ons -->
+<div class="px-4 mt-4">
+<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Optional Add-ons</h3>
+<div class="space-y-3">
+<label class="flex items-center p-4 border rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/20 has-[:checked]:border-primary has-[:checked]:bg-primary/10" for="addon1">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-primary bg-gray-100 dark:bg-gray-900 focus:ring-primary dark:focus:ring-offset-gray-800" id="addon1" type="checkbox"/>
+<div class="ml-4 flex-1">
+<span class="font-medium text-gray-900 dark:text-white">Extra Fast 24hr Delivery</span>
+</div>
+<span class="font-bold text-gray-800 dark:text-gray-100">+$50</span>
+</label>
+<label class="flex items-center p-4 border rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/20 has-[:checked]:border-primary has-[:checked]:bg-primary/10" for="addon2">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-primary bg-gray-100 dark:bg-gray-900 focus:ring-primary dark:focus:ring-offset-gray-800" id="addon2" type="checkbox"/>
+<div class="ml-4 flex-1">
+<span class="font-medium text-gray-900 dark:text-white">Additional Logo Concept</span>
+</div>
+<span class="font-bold text-gray-800 dark:text-gray-100">+$30</span>
+</label>
+<label class="flex items-center p-4 border rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/20 has-[:checked]:border-primary has-[:checked]:bg-primary/10" for="addon3">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-primary bg-gray-100 dark:bg-gray-900 focus:ring-primary dark:focus:ring-offset-gray-800" id="addon3" type="checkbox"/>
+<div class="ml-4 flex-1">
+<span class="font-medium text-gray-900 dark:text-white">Social Media Kit</span>
+</div>
+<span class="font-bold text-gray-800 dark:text-gray-100">+$75</span>
+</label>
+</div>
+</div>
+<!-- FAQ Accordion -->
+<div class="px-4 mt-8">
+<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Frequently Asked Questions</h3>
+<div class="space-y-2">
+<details class="group bg-white dark:bg-gray-800/20 rounded-lg p-4">
+<summary class="flex items-center justify-between cursor-pointer list-none">
+<span class="font-medium text-gray-900 dark:text-white">What do you need to get started?</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 text-gray-500 dark:text-gray-400">expand_more</span>
+</summary>
+<p class="mt-3 text-gray-600 dark:text-gray-300">I need your company name, slogan (if any), preferred color scheme, and any specific ideas or examples of logos you like to guide the design process.</p>
+</details>
+<details class="group bg-white dark:bg-gray-800/20 rounded-lg p-4">
+<summary class="flex items-center justify-between cursor-pointer list-none">
+<span class="font-medium text-gray-900 dark:text-white">What file formats will I receive?</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 text-gray-500 dark:text-gray-400">expand_more</span>
+</summary>
+<p class="mt-3 text-gray-600 dark:text-gray-300">You will receive high-resolution JPG, transparent PNG, and depending on the package, fully editable vector files (AI, EPS, SVG) that are ready for both web and print use.</p>
+</details>
+</div>
+</div>
+<!-- Floating Action Button -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700">
+<button class="w-full bg-primary text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-primary/30">Continue ($50)</button>
+</div>
+</div>
+</body></html>

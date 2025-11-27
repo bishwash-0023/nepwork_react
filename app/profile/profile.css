@@ -1,0 +1,37 @@
+body {
+	min-height: max(884px, 100dvh);
+}
+
+.material-symbols-outlined {
+	font-variation-settings:
+		"FILL" 0,
+		"wght" 400,
+		"GRAD" 0,
+		"opsz" 24;
+}
+
+.section-title {
+	font-size: 22px;
+	font-weight: bold;
+	line-height: 1.2;
+}
+
+.skill-pill {
+	background: rgba(74, 144, 226, 0.2);
+	padding: 4px 12px;
+	border-radius: 8px;
+	font-size: 14px;
+	color: #4a90e2;
+	font-weight: 500;
+}
+
+.horizontal-scroll {
+	display: flex;
+	gap: 16px;
+	overflow-x: auto;
+	padding-bottom: 12px;
+	scrollbar-width: none;
+}
+.horizontal-scroll::-webkit-scrollbar {
+	display: none;
+}
