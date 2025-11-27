@@ -172,44 +172,34 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Job Post Drafts Section */}
+      {/* My Job Postings Section */}
       <section className="px-4 py-6">
-        <h2 className="text-gray-900 dark:text-gray-100 text-lg font-bold leading-tight tracking-[-0.015em] pb-3">
-          Continue Your Drafts
-        </h2>
-        <div className="flex flex-col gap-3 rounded-xl bg-white dark:bg-[#192430] p-4 border border-gray-200 dark:border-gray-700">
-          <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
-            <div>
-              <p className="text-gray-900 dark:text-gray-100 font-medium">
-                Social Media Marketing Manager
-              </p>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">
-                Last saved: 2 days ago
-              </p>
-            </div>
-            <span className="material-symbols-outlined text-gray-500 dark:text-gray-400">
-              chevron_right
-            </span>
-          </div>
-          <div className="flex justify-between items-center py-2">
-            <div>
-              <p className="text-gray-900 dark:text-gray-100 font-medium">
-                Illustrator for Children's Book
-              </p>
-              <p className="text-gray-500 dark:text-gray-400 text-sm">
-                Last saved: 5 days ago
-              </p>
-            </div>
-            <span className="material-symbols-outlined text-gray-500 dark:text-gray-400">
-              chevron_right
-            </span>
-          </div>
+        <div className="flex items-center justify-between pb-3">
+            <h2 className="text-gray-900 dark:text-gray-100 text-lg font-bold leading-tight tracking-[-0.015em]">
+            My Job Postings
+            </h2>
+            <Link href="/my-jobs" className="text-primary text-sm font-bold hover:underline">
+                View All
+            </Link>
         </div>
-        <Link href="/post-job">
-            <button className="mt-4 flex w-full max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] px-6 hover:bg-primary/90 transition-colors">
-            Create a New Job Post
-            </button>
-        </Link>
+        
+        <div className="bg-white dark:bg-[#192430] rounded-xl border border-gray-200 dark:border-gray-700 p-6 text-center">
+            <p className="text-gray-500 dark:text-gray-400 mb-4">
+                Manage your job listings and view proposals from freelancers.
+            </p>
+            <div className="flex flex-col gap-3">
+                <Link href="/my-jobs">
+                    <button className="w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary/10 text-primary gap-2 text-base font-bold leading-normal tracking-[0.015em] px-6 hover:bg-primary/20 transition-colors">
+                    Manage My Jobs
+                    </button>
+                </Link>
+                <Link href="/post-job">
+                    <button className="w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] px-6 hover:bg-primary/90 transition-colors">
+                    Post a New Job
+                    </button>
+                </Link>
+            </div>
+        </div>
       </section>
     </DashboardLayout>
   );

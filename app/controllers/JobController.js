@@ -114,7 +114,44 @@ class JobController {
                 featured: true
             }
         ];
-        this.applications = [];
+        this.proposals = [
+            {
+                id: 1,
+                jobId: 1,
+                freelancerName: "Alice Dev",
+                freelancerAvatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuBecCzAzBEe41DuGoY03sthZ5A2jPjw8XN3_QFW6k2cTf14L8G7hzm5JLbLRzZI9U9y4KE2d_vZP89W5PQmVbONX8_thYUzzTDt0RoFSwli5wzn0BMeVVet2yfBmMHVrx_71vnMTeFh6lYEKm7kLBJDGkcDun8dFKEZucM1merHiASX-lQf599972CLQhRXsrEuJIOm7NkxBnBTJChYYyzfLxbrC6c9Oaodb0yI2HKUahd6s0N9QK5hG09qJLPxOfAEb5Jm2LOfZ-6w",
+                rating: 4.8,
+                reviews: 45,
+                bidAmount: 4800,
+                coverLetter: "I have 6 years of experience in React and have built similar dashboards.",
+                skills: ["React", "Redux", "Node.js"],
+                status: "Pending"
+            },
+            {
+                id: 2,
+                jobId: 1,
+                freelancerName: "Bob Coder",
+                freelancerAvatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuAh-aiNcCW5cqRtzstE3mQpmMhrw19H3dz-qO9bjqQM7WVWzUQvanGYDW8wCzm0W8-INMC3Ok5Olf91gEwOpiLfsqhHiJeBaAZamCr7_i4siDDvmJap_Wt0E6TGxF7bgaUwZozw2ONkc6Fil3e3TPVIpkdBjNRm6HVib4i0wF0VB20BubcXIWIOThphzFHrYtokWeOLXzufBikyKxHG2v-XJ8CXBQ33H63UdcgXH1LYYzawA8whQbkQi_QZ-gf979vkebTHvmGoHpMt",
+                rating: 4.5,
+                reviews: 20,
+                bidAmount: 4500,
+                coverLetter: "I am a full-stack developer with a focus on performance.",
+                skills: ["React", "TypeScript", "AWS"],
+                status: "Pending"
+            },
+            {
+                id: 3,
+                jobId: 1,
+                freelancerName: "Charlie Design",
+                freelancerAvatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuCTsD7VPifNUR9klSEyzvfL7WnyM6L_BjOvZMbGwcdA6AOsJHSoJb7T0_oY7ltm09FbujZLxzUdNzW_GbCkuQtWO5o5hGExplfdK46BNFaCnmrlISQ7F5-84iA6_kGoe9tT-BW7CNgUEtmuF1JiZKzRHwIY2A-T3KHx-9qQlpqrDgU0m3Dnuf5kpSNnZBvYUsVVrVYZgVDyOGu1goqDXLjZnqYqe_pdbtshSHcR9Gi78k7iMWUfuS6713NJlzZGVj5RtQyTkDxHVIIf",
+                rating: 4.9,
+                reviews: 80,
+                bidAmount: 5200,
+                coverLetter: "Top rated developer. I guarantee quality work.",
+                skills: ["React", "Next.js", "Tailwind"],
+                status: "Shortlisted"
+            }
+        ];
     }
 
     async getJobs(filter = {}) {
@@ -141,12 +178,31 @@ class JobController {
 
                 if (filter.minBudget) {
                     filteredJobs = filteredJobs.filter(job => {
-                         // Simple check, assuming fixed price for simplicity in filtering
                          return job.budget >= parseInt(filter.minBudget);
                     });
                 }
 
                 resolve(filteredJobs);
+            }, 500);
+        });
+    }
+
+    async getMyJobs() {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                // Return jobs posted by "My Company" or created by the user
+                // For demo, we'll return a mix of the dummy jobs and any new ones
+                const myJobs = this.jobs.filter(job => job.company === "My Company" || job.id === 1); // Mocking ID 1 as my job too for demo
+                resolve(myJobs);
+            }, 500);
+        });
+    }
+
+    async getProposals(jobId) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const jobProposals = this.proposals.filter(p => p.jobId === parseInt(jobId));
+                resolve(jobProposals);
             }, 500);
         });
     }
@@ -167,8 +223,9 @@ class JobController {
                     ...jobData,
                     postedTime: "Just now",
                     proposals: 0,
-                    company: "My Company", // Default for now
-                    location: "Remote"
+                    company: "My Company",
+                    location: "Remote",
+                    featured: false
                 };
                 this.jobs.unshift(newJob);
                 resolve({ success: true, job: newJob });
@@ -180,13 +237,17 @@ class JobController {
         return new Promise((resolve) => {
             setTimeout(() => {
                 const application = {
-                    id: this.applications.length + 1,
+                    id: this.proposals.length + 1,
                     jobId: parseInt(jobId),
+                    freelancerName: "Current User", // Mock
+                    freelancerAvatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDHaddvfg_K9JEOqKP2DbvFtKKvhyDsdf0P-DP2icTIlilDL8phFUbyEz0u5LCf7TZFs3-vZ11LnrqUXqBqixS5d8Qahv6GnTiI0UhcY1toVLO2CydfcNvdEhK5FZLur6G5DP4RjcHCPkFF8aoPk8ZDrUJjMs7hEJm2g6UYfmZpMlPzw6O-YPr640EpG9DYmR0HAMZCs2ujx_LIJceDDWVvni1MKKfTAJNTWexBhIaT8Ncs9uWZd_cXSYQVzSXDk3RNsdg92Jq5mERA",
+                    rating: 0,
+                    reviews: 0,
                     ...applicationData,
                     status: 'Pending',
                     appliedAt: new Date().toISOString()
                 };
-                this.applications.push(application);
+                this.proposals.push(application);
                 
                 // Update proposal count
                 const jobIndex = this.jobs.findIndex(j => j.id === parseInt(jobId));
