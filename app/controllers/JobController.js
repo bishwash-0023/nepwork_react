@@ -12,10 +12,12 @@ class JobController {
                 budget: 5000,
                 budgetType: "Fixed Price",
                 postedTime: "2 hours ago",
+                createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
                 tags: ["React", "Next.js", "Tailwind CSS"],
                 proposals: 5,
                 category: "Development",
-                featured: true
+                featured: true,
+                posterId: 1
             },
             {
                 id: 2,
@@ -28,10 +30,12 @@ class JobController {
                 budget: 300,
                 budgetType: "Fixed Price",
                 postedTime: "5 hours ago",
+                createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
                 tags: ["Logo Design", "Illustrator", "Branding"],
                 proposals: 12,
                 category: "Design",
-                featured: false
+                featured: false,
+                posterId: 1
             },
             {
                 id: 3,
@@ -44,10 +48,12 @@ class JobController {
                 budget: 50,
                 budgetType: "Hourly",
                 postedTime: "1 day ago",
+                createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
                 tags: ["SEO", "Marketing", "Google Analytics"],
                 proposals: 8,
                 category: "Marketing",
-                featured: false
+                featured: false,
+                posterId: 1
             },
              {
                 id: 4,
@@ -60,10 +66,12 @@ class JobController {
                 budget: 2000,
                 budgetType: "Fixed Price",
                 postedTime: "2 days ago",
+                createdAt: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
                 tags: ["Flutter", "Dart", "Mobile"],
                 proposals: 3,
                 category: "Development",
-                featured: true
+                featured: true,
+                posterId: 1
             },
             {
                 id: 5,
@@ -76,10 +84,12 @@ class JobController {
                 budget: 100,
                 budgetType: "Per Article",
                 postedTime: "3 days ago",
+                createdAt: new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString(),
                 tags: ["Writing", "Tech", "Blog"],
                 proposals: 15,
                 category: "Writing",
-                featured: false
+                featured: false,
+                posterId: 1
             },
             {
                 id: 6,
@@ -92,10 +102,12 @@ class JobController {
                 budget: 20,
                 budgetType: "Hourly",
                 postedTime: "4 hours ago",
+                createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
                 tags: ["Admin", "Virtual Assistant"],
                 proposals: 25,
                 category: "Admin",
-                featured: false
+                featured: false,
+                posterId: 1
             },
             {
                 id: 7,
@@ -108,10 +120,12 @@ class JobController {
                 budget: 4000,
                 budgetType: "Fixed Price",
                 postedTime: "1 week ago",
+                createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
                 tags: ["UI/UX", "Figma", "SaaS"],
                 proposals: 10,
                 category: "Design",
-                featured: true
+                featured: true,
+                posterId: 1
             }
         ];
         this.proposals = [
@@ -125,7 +139,8 @@ class JobController {
                 bidAmount: 4800,
                 coverLetter: "I have 6 years of experience in React and have built similar dashboards.",
                 skills: ["React", "Redux", "Node.js"],
-                status: "Pending"
+                status: "Pending",
+                freelancerId: 2
             },
             {
                 id: 2,
@@ -137,7 +152,8 @@ class JobController {
                 bidAmount: 4500,
                 coverLetter: "I am a full-stack developer with a focus on performance.",
                 skills: ["React", "TypeScript", "AWS"],
-                status: "Pending"
+                status: "Pending",
+                freelancerId: 3
             },
             {
                 id: 3,
@@ -149,7 +165,8 @@ class JobController {
                 bidAmount: 5200,
                 coverLetter: "Top rated developer. I guarantee quality work.",
                 skills: ["React", "Next.js", "Tailwind"],
-                status: "Shortlisted"
+                status: "Shortlisted",
+                freelancerId: 4
             }
         ];
     }
@@ -177,9 +194,19 @@ class JobController {
                 }
 
                 if (filter.minBudget) {
-                    filteredJobs = filteredJobs.filter(job => {
-                         return job.budget >= parseInt(filter.minBudget);
-                    });
+                    filteredJobs = filteredJobs.filter(job => job.budget >= parseInt(filter.minBudget));
+                }
+
+                if (filter.maxBudget) {
+                    filteredJobs = filteredJobs.filter(job => job.budget <= parseInt(filter.maxBudget));
+                }
+
+                if (filter.postedAfter) {
+                    filteredJobs = filteredJobs.filter(job => new Date(job.createdAt) >= new Date(filter.postedAfter));
+                }
+
+                if (filter.postedBefore) {
+                    filteredJobs = filteredJobs.filter(job => new Date(job.createdAt) <= new Date(filter.postedBefore));
                 }
 
                 resolve(filteredJobs);

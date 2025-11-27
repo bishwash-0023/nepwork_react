@@ -51,44 +51,73 @@ export default function JobsPage() {
               </button>
             </div>
             
-            {/* Quick Filters */}
-            <div className="flex gap-3 mt-4 overflow-x-auto pb-2 no-scrollbar">
-              <select 
-                className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border-none text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer focus:ring-2 focus:ring-primary/20"
-                value={filters.category}
-                onChange={(e) => handleFilterChange('category', e.target.value)}
-              >
-                <option value="All">All Categories</option>
-                <option value="Development">Development</option>
-                <option value="Design">Design</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Writing">Writing</option>
-                <option value="Admin">Admin</option>
-              </select>
+            {/* Advanced Filters */}
+            <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <select 
+                        className="w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-primary/20 outline-none"
+                        value={filters.category}
+                        onChange={(e) => handleFilterChange('category', e.target.value)}
+                    >
+                        <option value="All">All Categories</option>
+                        <option value="Development">Development</option>
+                        <option value="Design">Design</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Writing">Writing</option>
+                        <option value="Admin">Admin</option>
+                    </select>
 
-              <select 
-                className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border-none text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer focus:ring-2 focus:ring-primary/20"
-                value={filters.type}
-                onChange={(e) => handleFilterChange('type', e.target.value)}
-              >
-                <option value="All">All Job Types</option>
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
-                <option value="Contract">Contract</option>
-                <option value="Freelance">Freelance</option>
-              </select>
+                    <select 
+                        className="w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-primary/20 outline-none"
+                        value={filters.type}
+                        onChange={(e) => handleFilterChange('type', e.target.value)}
+                    >
+                        <option value="All">All Job Types</option>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Contract">Contract</option>
+                        <option value="Freelance">Freelance</option>
+                    </select>
 
-               <select 
-                className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border-none text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer focus:ring-2 focus:ring-primary/20"
-                value={filters.minBudget}
-                onChange={(e) => handleFilterChange('minBudget', e.target.value)}
-              >
-                <option value="">Any Budget</option>
-                <option value="100">$100+</option>
-                <option value="500">$500+</option>
-                <option value="1000">$1000+</option>
-                <option value="5000">$5000+</option>
-              </select>
+                    <div className="flex gap-2 items-center">
+                        <input 
+                            type="number" 
+                            placeholder="Min $" 
+                            className="w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none"
+                            value={filters.minBudget}
+                            onChange={(e) => handleFilterChange('minBudget', e.target.value)}
+                        />
+                        <span className="text-gray-400">-</span>
+                        <input 
+                            type="number" 
+                            placeholder="Max $" 
+                            className="w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none"
+                            value={filters.maxBudget || ''}
+                            onChange={(e) => handleFilterChange('maxBudget', e.target.value)}
+                        />
+                    </div>
+
+                    <div className="flex gap-2 items-center">
+                         <div className="relative w-full">
+                            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none">After</span>
+                            <input 
+                                type="date" 
+                                className="w-full pl-10 pr-2 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none"
+                                value={filters.postedAfter || ''}
+                                onChange={(e) => handleFilterChange('postedAfter', e.target.value)}
+                            />
+                        </div>
+                        <div className="relative w-full">
+                            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none">Before</span>
+                            <input 
+                                type="date" 
+                                className="w-full pl-10 pr-2 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none"
+                                value={filters.postedBefore || ''}
+                                onChange={(e) => handleFilterChange('postedBefore', e.target.value)}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
           </div>
         </div>
