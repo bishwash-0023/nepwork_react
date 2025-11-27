@@ -1,270 +1,263 @@
-"use client";
+import Header from '@/components/Header';
+import Link from 'next/link';
 
 export default function Home() {
-	return (
-		<div className="relative flex min-h-screen w-full flex-col pb-24">
-			{/* Top App Bar */}
-			<header className="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
-				<div className="flex items-center p-4">
-					<div className="flex size-12 shrink-0 items-center justify-start">
-						<div
-							className="aspect-square size-10 rounded-full bg-cover bg-center bg-no-repeat"
-							style={{
-								backgroundImage:
-									"url('https://lh3.googleusercontent.com/aida-public/AB6AXuC6iye8KvUDWULbL1zLyLydsimavGrdef3VolvbHNTDY7JJUhYqffXE_7am5ybG166k5qnK37IeDX3UvIbWpvEwrgSlWRcCZQj8Vq8wZJ4nTwGm4iEsOzlLb7y66r2K24uAv2i9hzki-B8ER1BLhqXDO6esasAQU_1habAXbP1dboEBD4GRHdRI71Gm0R3JqHsoT4sA_Rkk5G9H1-57DlgdheDbRlWjCOcZQQ_fLPMq2fNzsZ5NR-8Druwn6he9VAktCqcxHZm8sK6A')",
-							}}></div>
-					</div>
+  return (
+    <div className="relative flex min-h-screen w-full flex-col">
+      <Header />
+      <main className="flex-grow">
+        <div className="relative -mt-[72px] h-screen w-full overflow-hidden">
+          <img
+            alt="Diverse freelancers collaborating in a modern office setting"
+            className="absolute top-0 left-0 h-full w-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_ZmlsAjJ3dg6GGwsA66_YSdRsF-CSaLi7pUGAfD67vLjZNKbAmHIkVaPKgTw_wCcDghmi6uEI03oU-9YnTzyjxhLBU_HzyVM1oP6vI4XVxU1lJmu3n_FR5C_OAHA3m4tSnf_9a84_-8uMSQ5lNFPaA2zPo2eyP4BeyknTsbbOXQR9CPq6oHEDYCyKIq3HeqFgBfkJotpPrIK2JbFdP_xGho8QY8UyhrpHwP5fP7aPH2N3FeImPnKjIekoM3_-orYEp3-jcaMuUQ55"
+          />
+          <div className="absolute inset-0 bg-black/50"></div>
+          <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
+            <h1 className="text-white text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+              The Future of Work is Here
+            </h1>
+            <p className="mt-4 text-lg text-gray-200">
+              Connect with top freelance talent instantly.
+            </p>
+            <div className="w-full max-w-md mt-8 p-2 rounded-xl glassmorphism">
+              <div className="flex w-full items-stretch rounded-lg h-full bg-[#233648]/50">
+                <div className="text-[#92adc9] flex items-center justify-center pl-4">
+                  <span className="material-symbols-outlined text-white">search</span>
+                </div>
+                <input
+                  className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white placeholder:text-gray-300 focus:outline-0 focus:ring-0 border-none bg-transparent h-full pl-2 text-base font-normal leading-normal"
+                  placeholder="Search for 'logo design'..."
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
-					<h1 className="flex-1 text-lg font-bold text-slate-900 dark:text-white">
-						NEPWORK
-					</h1>
+        <section className="bg-gray-100 dark:bg-gray-900 py-16 px-4">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+            What Our Users Say
+          </h3>
+          <div className="grid grid-cols-1 gap-8">
+            <div className="bg-white dark:bg-background-dark p-6 rounded-xl shadow-md">
+              <div className="flex items-center mb-4">
+                <img
+                  alt="Client photo"
+                  className="w-14 h-14 rounded-full object-cover mr-4"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-rqNbReB1VdjdzFPL8kJwcdxGGK8AZ2ULdYOL-x62GX0FobkSul2jHPkpY68npwCCphF---lMQC1AWkgHhG6urBO0E8wwLiLxzVWx-Ak-ZJShjjfzR9bDfO6jGBBqJnms-D6cKNopmyVo8FY__SwJJA86AV4PCYwbWBhfg4m1k0J8LdJyamE4kcalJc5O5u3o7GFEm-OFiVhW9kFQOq9qFWjuBMgJtrqnryLVrOhamaT6oInVQ38m34IzLO6EZkjA6jvgiOu3w5nt"
+                />
+                <div>
+                  <h4 className="font-bold text-gray-900 dark:text-white">
+                    Sarah K., Project Manager
+                  </h4>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Client</p>
+                  <div className="flex items-center mt-1">
+                    {[...Array(5)].map((_, i) => (
+                      <span
+                        key={i}
+                        className="material-symbols-outlined text-yellow-400 text-base"
+                        style={{ fontVariationSettings: "'FILL' 1" }}
+                      >
+                        star
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p className="text-gray-700 dark:text-gray-300">
+                "Finding a talented developer for our mobile app was incredibly fast and
+                easy. The quality of work exceeded our expectations. Highly
+                recommended!"
+              </p>
+            </div>
+            <div className="bg-white dark:bg-background-dark p-6 rounded-xl shadow-md">
+              <div className="flex items-center mb-4">
+                <img
+                  alt="Freelancer photo"
+                  className="w-14 h-14 rounded-full object-cover mr-4"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHaddvfg_K9JEOqKP2DbvFtKKvhyDsdf0P-DP2icTIlilDL8phFUbyEz0u5LCf7TZFs3-vZ11LnrqUXqBqixS5d8Qahv6GnTiI0UhcY1toVLO2CydfcNvdEhK5FZLur6G5DP4RjcHCPkFF8aoPk8ZDrUJjMs7hEJm2g6UYfmZpMlPzw6O-YPr640EpG9DYmR0HAMZCs2ujx_LIJceDDWVvni1MKKfTAJNTWexBhIaT8Ncs9uWZd_cXSYQVzSXDk3RNsdg92Jq5mERA"
+                />
+                <div>
+                  <h4 className="font-bold text-gray-900 dark:text-white">
+                    David L., UI/UX Designer
+                  </h4>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Freelancer
+                  </p>
+                  <div className="flex items-center mt-1">
+                    {[...Array(5)].map((_, i) => (
+                      <span
+                        key={i}
+                        className="material-symbols-outlined text-yellow-400 text-base"
+                        style={{ fontVariationSettings: "'FILL' 1" }}
+                      >
+                        star
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p className="text-gray-700 dark:text-gray-300">
+                "This platform has been a game-changer for my freelance career. I'm
+                consistently finding high-quality projects that match my skills. The
+                payment protection gives me peace of mind."
+              </p>
+            </div>
+          </div>
+        </section>
 
-					<div className="flex w-12 items-center justify-end">
-						<button className="flex h-12 items-center justify-center rounded-lg text-slate-600 dark:text-white">
-							<span className="material-symbols-outlined">
-								notifications
-							</span>
-						</button>
-					</div>
-				</div>
+        <section className="py-16 px-4">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+            Popular Categories
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <Link
+              href="#"
+              className="group relative col-span-2 row-span-1 h-40 flex flex-col justify-end p-4 rounded-xl overflow-hidden text-white transition-transform duration-300 ease-in-out hover:scale-[1.02]"
+            >
+              <div className="absolute inset-0 grid-item-gradient-1"></div>
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-20"
+                style={{
+                  backgroundImage:
+                    "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAffa4_q2T5fuq-Jw9LvQVWA6R-J6AJZVZHEeouL3OfHcdM2Ndahb0SNmsOsClpIZv7-v0MJ0afeeqd0SEloTLtTCeB9nc2y-ZzLzhgsUvcfHuEWaL3VpqOatnnVDa5M-1-djIKeYsBGAQY9io_ame5C0zQvZLoS06ylReCzHl6pBrNfOyoVYLpSufvFRB-mH1hAoHEozgaUH1wWKJ7LNZIMWQRAd8NLhIApNkrUBm7JQUp2csRm_pzkGZCav71ZOFS9YyBHssg7ENH')",
+                }}
+              ></div>
+              <div className="relative z-10">
+                <span className="material-symbols-outlined mb-2 text-3xl">code</span>
+                <h4 className="font-bold text-lg">Development & IT</h4>
+              </div>
+            </Link>
+            <Link
+              href="#"
+              className="group relative col-span-1 row-span-1 h-48 flex flex-col justify-end p-4 rounded-xl overflow-hidden text-white transition-transform duration-300 ease-in-out hover:scale-[1.02]"
+            >
+              <div className="absolute inset-0 grid-item-gradient-2"></div>
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-20"
+                style={{
+                  backgroundImage:
+                    "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBIx-U62yZRawttNunQdUUrAwStHCAPqcRI1Qs6mn6ltk3L0CbSXaId90eAJMxRRCTOdSpo-q16ziLJUnhPuSQayTwDiKItFOre_vfw0wVEm5lsBW7OmLTeiTV9vbazYJF7QeF0nLjXnm_nInq4JUU3dF4G5KTfv1BXf4Hz2AziQR0XnKtb55m_9Y0UmT3-RgpdncGIExB_PNLpL3QI0dKJyuWqn5fZDBWOgKP-gNh4keOS-6nE2SFFZmcnABiSrOUBDz0h0D-a5GG5')",
+                }}
+              ></div>
+              <div className="relative z-10">
+                <span className="material-symbols-outlined mb-2 text-3xl">
+                  design_services
+                </span>
+                <h4 className="font-bold text-lg">Design & Creative</h4>
+              </div>
+            </Link>
+            <Link
+              href="#"
+              className="group relative col-span-1 row-span-1 h-48 flex flex-col justify-end p-4 rounded-xl overflow-hidden text-white transition-transform duration-300 ease-in-out hover:scale-[1.02]"
+            >
+              <div className="absolute inset-0 grid-item-gradient-3"></div>
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-20"
+                style={{
+                  backgroundImage:
+                    "url('https://lh3.googleusercontent.com/aida-public/AB6AXuD31DQYdtzuUc8_FRV4aGauegvSSznzoVDgRdBi5QKbnbEuOlhtlC1S3CENuywdGXCfkog7U6afaTGshxOuOL7MzHs-kK4M-te2-sqRwCb5BqSPFqTZCp8PEYICCkQYVP-MaoOjdnEwOUVfeodpcZD3wkvtr6G0AOTMKWIa1yHAdX8M7l-5stVf7X6S53fJXvZisQRw6LqRRIUI9DisxwlkQCpkhya8-MllC3eK6RbFYLQM850UXaIJLQzTmXe0ayicypC7CN1MSGOK')",
+                }}
+              ></div>
+              <div className="relative z-10">
+                <span className="material-symbols-outlined mb-2 text-3xl">
+                  campaign
+                </span>
+                <h4 className="font-bold text-lg">Marketing</h4>
+              </div>
+            </Link>
+            <Link
+              href="#"
+              className="group relative col-span-1 row-span-1 h-40 flex flex-col justify-end p-4 rounded-xl overflow-hidden text-white transition-transform duration-300 ease-in-out hover:scale-[1.02]"
+            >
+              <div className="absolute inset-0 grid-item-gradient-4"></div>
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-20"
+                style={{
+                  backgroundImage:
+                    "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCLIW-m2Va5XsSnULZPSnwADZwXWX77wjJdroQRw8kXtE87ucaOIq9ahBitCDvG5aOQbrxt2SlQfc-Gxw_zKH0cNgQLesrzDnxbOz-am5rFx39zuF7ZJ0Mp9B4bOtHZ6Spxa_B-N2ZiYg9YOCLWCLjdHv7cWFyD7HwhDJzLsmE39_UjndnLfsi2yyJCZJ0NI_Ettcy_HDSfOKygTY9G7A9XF6X3yJIoPJtXBJxxZpwvFeyDCuW_L9-GcDtUCXJTrg9M8PBrbpdxHl-N')",
+                }}
+              ></div>
+              <div className="relative z-10">
+                <span className="material-symbols-outlined mb-2 text-3xl">
+                  translate
+                </span>
+                <h4 className="font-bold text-lg">Writing</h4>
+              </div>
+            </Link>
+            <Link
+              href="#"
+              className="group relative col-span-1 row-span-1 h-40 flex flex-col justify-end p-4 rounded-xl overflow-hidden text-white transition-transform duration-300 ease-in-out hover:scale-[1.02]"
+            >
+              <div className="absolute inset-0 grid-item-gradient-5"></div>
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-20"
+                style={{
+                  backgroundImage:
+                    "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAf9ScxZQO-_Gcy742wew4wuD_2gnOq9i_PyHx9D1dI2n5kKT3BrnDivyZcwa1gghgcnG2LjLTbyh8oC56GmZqWewuj_NPmM0F5gFhstuDArx6A_vSfKhXKOD3EfwIyEa1jHmFUfHNFkK5X3MXjefk-4p1-7viyjzD-luZ4HS92WGSGGkdGbtqlbzaea5KVqZKZKQceFDt8TRzjqvB2xneyqRezC2ZSItpU67IEfwpmgFzkJGePJ8REVkVrKoS3Nwbr55jb6qGWFk87')",
+                }}
+              ></div>
+              <div className="relative z-10">
+                <span className="material-symbols-outlined mb-2 text-3xl">
+                  psychology
+                </span>
+                <h4 className="font-bold text-lg">AI Services</h4>
+              </div>
+            </Link>
+          </div>
+        </section>
 
-				{/* Search Bar */}
-				<div className="px-4 pb-3">
-					<label className="flex h-12 w-full">
-						<div className="flex h-full w-full items-stretch rounded-xl shadow-sm">
-							<div className="flex items-center justify-center rounded-l-xl border border-slate-200 bg-white pl-4 text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500">
-								<span className="material-symbols-outlined">
-									search
-								</span>
-							</div>
-
-							<input
-								className="form-input h-full w-full rounded-r-xl border border-slate-200 bg-white px-4 text-base text-slate-900 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 focus:ring-primary/50 dark:focus:ring-primary/70"
-								placeholder="Search jobs, skills, freelancers..."
-							/>
-						</div>
-					</label>
-				</div>
-
-				{/* Segmented Buttons */}
-				<div className="flex px-4 py-1">
-					<div className="flex h-10 flex-1 items-center justify-center rounded-xl bg-slate-200 p-1 dark:bg-slate-800">
-						<label className="flex h-full grow cursor-pointer items-center justify-center rounded-lg px-2 text-sm font-medium text-slate-500 dark:text-slate-400 has-[:checked]:bg-white dark:has-[:checked]:bg-slate-700 has-[:checked]:text-slate-900 dark:has-[:checked]:text-white">
-							<span className="truncate">Find Work</span>
-							<input
-								type="radio"
-								name="viewToggle"
-								defaultChecked
-								className="hidden"
-							/>
-						</label>
-
-						<label className="flex h-full grow cursor-pointer items-center justify-center rounded-lg px-2 text-sm font-medium text-slate-500 dark:text-slate-400 has-[:checked]:bg-white dark:has-[:checked]:bg-slate-700 has-[:checked]:text-slate-900 dark:has-[:checked]:text-white">
-							<span className="truncate">Find Talent</span>
-							<input
-								type="radio"
-								name="viewToggle"
-								className="hidden"
-							/>
-						</label>
-					</div>
-				</div>
-			</header>
-
-			{/* Main Content */}
-			<main className="flex flex-col gap-4">
-				<h3 className="px-4 pt-4 pb-0 text-lg font-bold text-slate-900 dark:text-white">
-					Recommended For You
-				</h3>
-
-				{/* Job Posting Card 1 */}
-				<div className="px-4">
-					<div className="flex flex-col rounded-xl bg-white shadow-sm dark:bg-slate-800/50">
-						<div
-							className="w-full aspect-[3/1] rounded-t-xl bg-cover bg-center"
-							style={{
-								backgroundImage:
-									"url('https://lh3.googleusercontent.com/aida-public/AB6AXuDb1g19hwg7dNXfIOsrW-2nuh4xqsosb1g-L2Qj1zZ7-PVHA3PtnRQ4puV2h0etllV2lPoBLmLIEMuwVFds9CyxcSagIUg2dTSwWMlIuUDlJx7_FCKDKOWZTjBiVdZ_quGGh9Pp6zRdtPS_pbdJe-i4jw-4BliJ3irAaY899-rzdZyI7mgx4F1k5vM9gNWeI5HgEfzhdXwoN24BMFsMpiSnruZh0iuswkfkVdO2gPeDVdS7k1QugP4sXPuwKXxEYYwPxifrqo5Xt4H9')",
-							}}></div>
-
-						<div className="p-4 flex flex-col gap-2">
-							<p className="text-sm text-slate-500 dark:text-slate-400">
-								Innovate Inc.
-							</p>
-
-							<p className="text-lg font-bold text-slate-900 dark:text-white">
-								Senior UX Designer for Mobile App
-							</p>
-
-							<div className="flex gap-2 pt-1">
-								{["Figma", "User Research", "Prototyping"].map(
-									(tag) => (
-										<span
-											key={tag}
-											className="rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary dark:bg-primary/20">
-											{tag}
-										</span>
-									)
-								)}
-							</div>
-
-							<div className="flex justify-between pt-2">
-								<p className="text-base text-slate-500 dark:text-slate-400">
-									$5,000 budget – Posted 2h ago
-								</p>
-
-								<button className="h-10 min-w-[84px] rounded-lg bg-primary px-4 text-sm text-white shadow-sm hover:bg-primary/90">
-									Apply Now
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				{/* Freelancer Card */}
-				<div className="px-4">
-					<div className="flex items-center gap-4 rounded-xl bg-white p-4 shadow-sm dark:bg-slate-800/50">
-						<div
-							className="size-16 rounded-full bg-cover bg-center"
-							style={{
-								backgroundImage:
-									"url('https://media.licdn.com/dms/image/v2/D4D03AQEI4h4YR6DTyw/profile-displayphoto-shrink_200_200/B4DZZbN3ZRGsAY-/0/1745287084133?e=2147483647&v=beta&t=nQ2McL3RuGeJkyw643aS7SiU4ajyUZbJQjUJ18X1ses')",
-							}}></div>
-
-						<div className="flex flex-col min-w-0 flex-1">
-							<div className="flex justify-between">
-								<p className="truncate text-base font-bold text-slate-900 dark:text-white">
-									Aayub niroula
-								</p>
-
-								<div className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
-									<span
-										className="material-symbols-outlined text-base text-amber-400 dark:text-amber-300"
-										style={{
-											fontVariationSettings: "'FILL' 1",
-										}}>
-										star
-									</span>
-									<span className="text-sm font-medium">
-										4.9
-									</span>
-								</div>
-							</div>
-
-							<p className="truncate text-sm text-slate-500 dark:text-slate-400">
-								Lead UI/UX Designer
-							</p>
-							<p className="truncate text-sm text-slate-500 dark:text-slate-400">
-								$95/hr
-							</p>
-						</div>
-
-						<button className="h-10 rounded-lg border border-slate-300 px-4 text-sm text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700">
-							View
-						</button>
-					</div>
-				</div>
-
-				{/* Job Posting Card 2 */}
-				<div className="px-4">
-					<div className="flex flex-col rounded-xl bg-white shadow-sm dark:bg-slate-800/50">
-						<div
-							className="w-full aspect-[3/1] rounded-t-xl bg-cover bg-center"
-							style={{
-								backgroundImage:
-									"url('https://lh3.googleusercontent.com/aida-public/AB6AXuDygLHgXVd_pIMLT4waeNc5RgmnrStmHp-COxnQa9mpFgzvO2y4euoIY8DDXMNhgDpW8jaEf2ONFa4gugbfwG0-gKij1Ry1XTl-zE1O5qmGRa9q2umCIEHTAQHC4zRVGgCjWVRevTzu-XRXWY9ZaNR9pEwUOzwHgkT8GxZp0V0HAx2pJ6Sh77krGpePeco1iBnd6PcryVbarQZEzQhsT4qhHDOiFwNsoIr4Oq12xS5OVzMjkJHljkzm0Ks-mHCsd_LrQ3t1zCRhkcNu')",
-							}}></div>
-
-						<div className="p-4 flex flex-col gap-2">
-							<p className="text-sm text-slate-500 dark:text-slate-400">
-								Tech Solutions Ltd.
-							</p>
-
-							<p className="text-lg font-bold text-slate-900 dark:text-white">
-								Full-Stack Developer (React & Node.js)
-							</p>
-
-							<div className="flex gap-2 pt-1">
-								{["React", "Node.js", "MongoDB"].map((tag) => (
-									<span
-										key={tag}
-										className="rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary dark:bg-primary/20">
-										{tag}
-									</span>
-								))}
-							</div>
-
-							<div className="flex justify-between pt-2">
-								<p className="text-base text-slate-500 dark:text-slate-400">
-									$8,000 budget – Posted 5h ago
-								</p>
-
-								<button className="h-10 min-w-[84px] rounded-lg bg-primary px-4 text-sm text-white shadow-sm hover:bg-primary/90">
-									Apply Now
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				{/* Project Status Card */}
-				<div className="px-4">
-					<div className="rounded-xl bg-white p-4 shadow-sm dark:bg-slate-800/50">
-						<div className="flex justify-between">
-							<div>
-								<p className="text-xs font-medium uppercase text-slate-400 dark:text-slate-500">
-									Active Project
-								</p>
-								<p className="text-base font-bold text-slate-900 dark:text-white">
-									E-commerce Platform Redesign
-								</p>
-								<p className="text-sm text-slate-500 dark:text-slate-400">
-									with John Appleseed
-								</p>
-							</div>
-
-							<div className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800 dark:bg-green-500/20 dark:text-green-300">
-								In Progress
-							</div>
-						</div>
-					</div>
-				</div>
-			</main>
-
-			{/* Floating Action Button */}
-			<div className="fixed bottom-24 right-4 z-10">
-				<button className="flex size-14 rounded-full bg-primary text-white shadow-lg hover:scale-105">
-					<span className="material-symbols-outlined !text-3xl">
-						add
-					</span>
-				</button>
-			</div>
-
-			{/* Bottom Navigation */}
-			<nav className="fixed bottom-0 left-0 right-0 z-10 border-t border-slate-200 bg-background-light/80 backdrop-blur-sm dark:border-slate-800 dark:bg-background-dark/80">
-				<div className="mx-auto flex h-16 max-w-md items-center justify-around px-4">
-					{[
-						["home", "Home"],
-						["chat_bubble", "Messages"],
-						["work", "Projects"],
-						["person", "Profile"],
-					].map(([icon, label], idx) => (
-						<a
-							key={idx}
-							className={`flex flex-col items-center gap-1 ${
-								idx === 0
-									? "text-primary"
-									: "text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-primary"
-							}`}
-							href="#">
-							<span className="material-symbols-outlined">
-								{icon}
-							</span>
-							<span className="text-xs font-medium">{label}</span>
-						</a>
-					))}
-				</div>
-			</nav>
-		</div>
-	);
+        <section className="pb-28 pt-8 px-4">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 text-center">
+            Trusted by Industry Leaders
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 text-center mb-8">
+            Powering teams at the world's most innovative companies.
+          </p>
+          <div className="flex items-center justify-center space-x-8 overflow-x-auto grayscale opacity-60 dark:invert dark:opacity-80 pb-8">
+            <img
+              className="h-8"
+              alt="Google logo"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU-kWtLbvC_FVFWdn5QZVfOAK5CFf-zdpYXvfa2eyLpXKg56e5arKStZgJXKnFXSiLZTjqzvsnYX9bWemQ7Py7aG9kbHM8WxFfl9Ffc_o8yFRKtCY_CFpQ4u_9iriLRnsIGNM5iIU40tWRfKcjaqCgByiLjvNU1NDUdQdJMjCeXiJ-KL1MdchJnFhBQI-epIFQyfMU-er5uw71nFLFS0XeAsxKVqOF9HCeeeogJ9oscwO1LI4_F1mVAEnbaB1VRGRK2GDM8T7RO971"
+            />
+            <img
+              className="h-8"
+              alt="Amazon logo"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEnJQc4rCckzXtU6gGF5OuzlbnG51LMiuAfFZrguptdj42vRN1IJmOIBbiUEbvUWS9y7FpZJXX4_WXdKliWOkUUFcAyaJDOTsj_ESPubQ0K3FWFr2FmCAnSUidZ7gL8X_2szfyWVXCGK59CYk2eROccOJcwyZVeNk1HGRDzVcKkXtI8pPUiwxBLSzIQcaHqKvK-tzTVaDuQqJSqnxyeB7Z4phX2XV21uYtZ6VKBCy9W9cNGNJRSgtRwz3k0dFabWGZDE927ZzkEYcP"
+            />
+            <img
+              className="h-8"
+              alt="Netflix logo"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbmIGwJq__MuMoT1yqryIWjR-6xIfUJoH2PMcMjRe-Mdwj720zvLJrzCZCDGnt3hfR8qX5_GB8sC0KOvU03_tjHMD8R3QyI_Fs73jAiJgP3PzA0nR13iEd5ErJiFe1KFpvJnOpnzf_lUgawK-6x2DoiXeu63MK_c5nsBZKw_e-vpDT5TfZ_34slOp4_Px4I5-xNjOdW97Wu68kBU3cZE9wqi8gKzMu5MeGsUXipwscvOTM2n8jBJ0gAOJu4RX9MaKz0-oI87kvExr1"
+            />
+            <img
+              className="h-8"
+              alt="Adobe logo"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuATWB6whAmvK_U-kUO21PxKC53mmR46cWWtjANsbOME4BeAngEJ3qOSmE9INA4ckdMfQmXs8fy2pAfmQzwoljngDqBidfpMNo2lRoyvcYcZau_muwvsucFnkFV5CGLIxwNfd0DBRb0bLBLwtvbhLEReTZ8XtHIflFjaUm0a_Y_bHSrNSR6homDrI0J79ONOeWWyICfTf_jNbn9ji2_oEulQuyO9rf4QeCrdna1dTBAN6_x-zcfzMvw3xCwskE1YxDi3tWTz1AqUY9bv"
+            />
+          </div>
+          <div className="mt-8 grid grid-cols-2 gap-4 text-center">
+            <div className="bg-gray-100 dark:bg-gray-800/50 p-6 rounded-xl">
+              <p className="text-3xl font-bold text-primary">1,500+</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Jobs Posted Today
+              </p>
+            </div>
+            <div className="bg-gray-100 dark:bg-gray-800/50 p-6 rounded-xl">
+              <p className="text-3xl font-bold text-primary">50k+</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Skilled Freelancers
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+      <div className="fixed bottom-6 right-6 z-40">
+        <button className="flex items-center gap-2 h-14 pl-5 pr-6 rounded-full text-white font-semibold shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 gradient-fab">
+          <span className="material-symbols-outlined">auto_awesome</span>
+          <span>AI Match</span>
+        </button>
+      </div>
+    </div>
+  );
 }

@@ -5,17 +5,17 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				primary: "#13b6ec",
-				"background-light": "#f6f8f8",
-				"background-dark": "#101d22",
+				primary: "#137fec",
+				"background-light": "#f6f7f8",
+				"background-dark": "#101922",
 			},
 			fontFamily: {
 				display: ["Inter", "sans-serif"],
 			},
 			borderRadius: {
-				DEFAULT: "0.25rem",
-				lg: "0.5rem",
-				xl: "0.75rem",
+				DEFAULT: "0.5rem",
+				lg: "1rem",
+				xl: "1.5rem",
 				full: "9999px",
 			},
 		},
