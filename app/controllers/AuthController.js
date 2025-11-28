@@ -1,120 +1,162 @@
-class AuthController {
-    constructor() {
-        this.tokenKey = 'nepwork_auth_token';
-        this.userKey = 'nepwork_user';
-    }
+import api, { setTokens, clearTokens, getToken } from "@/app/services/api";
 
-    // Helper to set cookie
-    setCookie(name, value, days = 7) {
-        if (typeof document === 'undefined') return;
-        const expires = new Date(Date.now() + days * 864e5).toUTCString();
-        document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
-    }
+const USER_KEY = "nepwork_user";
 
-    // Helper to get cookie
-    getCookie(name) {
-        if (typeof document === 'undefined') return null;
-        return document.cookie.split('; ').reduce((r, v) => {
-            const parts = v.split('=');
-            return parts[0] === name ? decodeURIComponent(parts[1]) : r
-        }, null);
-    }
-
-    // Helper to delete cookie
-    deleteCookie(name) {
-        if (typeof document === 'undefined') return;
-        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-    }
-
-    async login(email, password) {
-        // Simulate API call
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (email === 'admin@test.com' && password === 'admin123') {
-                    const token = 'jwt_admin_token_' + Date.now();
-                    const user = {
-                        id: 1,
-                        name: 'Admin User',
-                        email: email,
-                        role: 'client', 
-                        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCAgs6fSmkTf_uzSaZF1mOLr6nluNuGwtd7aV42-C1ZSIOzjC5RQR3u5MTkY9-qePhwT5LGzOANqoFo7tPKWEY3q_kmd_BQ3QAfKx0akzDULzrg-GCd1itahuAgu2jhXHFwA_s0Lv0S9Xx7M92br-VZ0hPqafbt0k12uYKncHOFncSlAHU4ELNCDJVHWnhxrUTaQf7mWw8rMc3fZC_6KKy2IVePfDbBYWmMahmJ-3rZq-beq6BZ1IJa2VBscmBaaAdeCFIBx1yUFpX7',
-                        onboardingCompleted: true // Admin is already onboarded
-                    };
-                    this.setCookie(this.tokenKey, token);
-                    localStorage.setItem(this.userKey, JSON.stringify(user));
-                    resolve({ success: true, user, token });
-                } else if (email && password) {
-                     // Generic login for testing other flows
-                    const token = 'dummy_token_' + Date.now();
-                    const user = {
-                        id: Math.floor(Math.random() * 1000),
-                        name: 'Test User',
-                        email: email,
-                        role: 'freelancer',
-                        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDHaddvfg_K9JEOqKP2DbvFtKKvhyDsdf0P-DP2icTIlilDL8phFUbyEz0u5LCf7TZFs3-vZ11LnrqUXqBqixS5d8Qahv6GnTiI0UhcY1toVLO2CydfcNvdEhK5FZLur6G5DP4RjcHCPkFF8aoPk8ZDrUJjMs7hEJm2g6UYfmZpMlPzw6O-YPr640EpG9DYmR0HAMZCs2ujx_LIJceDDWVvni1MKKfTAJNTWexBhIaT8Ncs9uWZd_cXSYQVzSXDk3RNsdg92Jq5mERA',
-                        onboardingCompleted: false // New users need onboarding
-                    };
-                    this.setCookie(this.tokenKey, token);
-                    localStorage.setItem(this.userKey, JSON.stringify(user));
-                    resolve({ success: true, user, token });
-                } else {
-                    reject({ success: false, message: 'Invalid credentials' });
-                }
-            }, 1000);
-        });
-    }
-
-    async signup(data) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const token = 'dummy_token_' + Date.now();
-                const user = {
-                    id: Math.floor(Math.random() * 1000),
-                    name: data.fullName || 'New User',
-                    email: data.email,
-                    role: data.role || 'freelancer',
-                    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDHaddvfg_K9JEOqKP2DbvFtKKvhyDsdf0P-DP2icTIlilDL8phFUbyEz0u5LCf7TZFs3-vZ11LnrqUXqBqixS5d8Qahv6GnTiI0UhcY1toVLO2CydfcNvdEhK5FZLur6G5DP4RjcHCPkFF8aoPk8ZDrUJjMs7hEJm2g6UYfmZpMlPzw6O-YPr640EpG9DYmR0HAMZCs2ujx_LIJceDDWVvni1MKKfTAJNTWexBhIaT8Ncs9uWZd_cXSYQVzSXDk3RNsdg92Jq5mERA',
-                    onboardingCompleted: false
-                };
-                this.setCookie(this.tokenKey, token);
-                localStorage.setItem(this.userKey, JSON.stringify(user));
-                resolve({ success: true, user, token });
-            }, 1000);
-        });
-    }
-
-    async completeOnboarding(details) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const user = this.getUser();
-                if (user) {
-                    const updatedUser = { ...user, ...details, onboardingCompleted: true };
-                    localStorage.setItem(this.userKey, JSON.stringify(updatedUser));
-                    resolve({ success: true, user: updatedUser });
-                } else {
-                    resolve({ success: false, message: 'User not found' });
-                }
-            }, 800);
-        });
-    }
-
-    logout() {
-        this.deleteCookie(this.tokenKey);
-        localStorage.removeItem(this.userKey);
-        if (typeof window !== 'undefined') {
-            window.location.href = '/login';
-        }
-    }
-
-    isAuthenticated() {
-        return !!this.getCookie(this.tokenKey);
-    }
-
-    getUser() {
-        if (typeof localStorage === 'undefined') return null;
-        const userStr = localStorage.getItem(this.userKey);
-        return userStr ? JSON.parse(userStr) : null;
-    }
+// Helper to transform user data from backend
+function transformUser(data) {
+	return {
+		id: data.id,
+		email: data.email,
+		name:
+			data.full_name ||
+			`${data.first_name || ""} ${data.last_name || ""}`.trim(),
+		firstName: data.first_name,
+		lastName: data.last_name,
+		role: data.role,
+		avatar: data.avatar,
+		bio: data.bio,
+		location: data.location,
+		title: data.title,
+		skills: data.skills || [],
+		hourlyRate: data.hourly_rate,
+		onboardingCompleted: data.onboarding_completed,
+		dateJoined: data.date_joined,
+	};
 }
 
-export const authController = new AuthController();
+// Store/retrieve user from localStorage
+function getStoredUser() {
+	if (typeof window === "undefined") return null;
+	const data = localStorage.getItem(USER_KEY);
+	return data ? JSON.parse(data) : null;
+}
+
+function storeUser(user) {
+	if (typeof window !== "undefined") {
+		localStorage.setItem(USER_KEY, JSON.stringify(user));
+	}
+}
+
+function clearUser() {
+	if (typeof window !== "undefined") {
+		localStorage.removeItem(USER_KEY);
+	}
+}
+
+export const authController = {
+	// Login
+	async login(email, password) {
+		try {
+			const { data: tokens } = await api.post("/auth/jwt/create/", {
+				email,
+				password,
+			});
+			setTokens(tokens.access, tokens.refresh);
+			const user = await this.fetchCurrentUser();
+			return { success: true, user };
+		} catch (error) {
+			return {
+				success: false,
+				message: error.response?.data?.detail || "Invalid credentials",
+			};
+		}
+	},
+
+	// Signup
+	async signup({ email, password, firstName, lastName, role }) {
+		try {
+			await api.post("/auth/users/", {
+				email,
+				password,
+				first_name: firstName || "",
+				last_name: lastName || "",
+				role: role === "hire" ? "client" : "freelancer",
+			});
+			return await this.login(email, password);
+		} catch (error) {
+			return {
+				success: false,
+				message:
+					error.response?.data?.email?.[0] ||
+					error.response?.data?.detail ||
+					"Signup failed",
+			};
+		}
+	},
+
+	// Fetch current user
+	async fetchCurrentUser() {
+		try {
+			const { data } = await api.get("/api/users/me/");
+			const user = transformUser(data);
+			storeUser(user);
+			return user;
+		} catch {
+			return null;
+		}
+	},
+
+	// Complete onboarding
+	async completeOnboarding(details) {
+		try {
+			const { data } = await api.patch("/api/users/me/", {
+				bio: details.bio,
+				location: details.location,
+				title: details.title,
+				skills: details.skills,
+				hourly_rate: details.hourlyRate,
+				onboarding_completed: true,
+			});
+			const user = transformUser(data);
+			storeUser(user);
+			return { success: true, user };
+		} catch (error) {
+			return {
+				success: false,
+				error: error.response?.data?.detail || "Update failed",
+			};
+		}
+	},
+
+	// Update profile
+	async updateProfile(updates) {
+		try {
+			const payload = {};
+			if (updates.firstName !== undefined)
+				payload.first_name = updates.firstName;
+			if (updates.lastName !== undefined)
+				payload.last_name = updates.lastName;
+			if (updates.bio !== undefined) payload.bio = updates.bio;
+			if (updates.location !== undefined)
+				payload.location = updates.location;
+			if (updates.title !== undefined) payload.title = updates.title;
+			if (updates.skills !== undefined) payload.skills = updates.skills;
+			if (updates.hourlyRate !== undefined)
+				payload.hourly_rate = updates.hourlyRate;
+			if (updates.avatar !== undefined) payload.avatar = updates.avatar;
+
+			const { data } = await api.patch("/api/users/me/", payload);
+			const user = transformUser(data);
+			storeUser(user);
+			return { success: true, user };
+		} catch (error) {
+			return {
+				success: false,
+				error: error.response?.data?.detail || "Update failed",
+			};
+		}
+	},
+
+	// Logout
+	logout() {
+		clearTokens();
+		clearUser();
+		if (typeof window !== "undefined") window.location.href = "/login";
+	},
+
+	// Check auth status
+	isAuthenticated: () => !!getToken(),
+
+	// Get cached user
+	getUser: getStoredUser,
+};

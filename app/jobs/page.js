@@ -1,202 +1,285 @@
-'use client';
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import DashboardLayout from '@/components/DashboardLayout';
-import { jobController } from '@/app/controllers/JobController';
+"use client";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import DashboardLayout from "@/components/DashboardLayout";
+import { jobController } from "@/app/controllers/JobController";
 
 export default function JobsPage() {
-  const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({
-    search: '',
-    category: 'All',
-    type: 'All',
-    minBudget: ''
-  });
+	const [jobs, setJobs] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [totalCount, setTotalCount] = useState(0);
+	const [filters, setFilters] = useState({
+		search: "",
+		category: "All",
+		type: "All",
+		minBudget: "",
+	});
 
-  useEffect(() => {
-    fetchJobs();
-  }, [filters]); // Re-fetch when filters change (debouncing could be added for search)
+	useEffect(() => {
+		fetchJobs();
+	}, [filters]); // Re-fetch when filters change (debouncing could be added for search)
 
-  const fetchJobs = async () => {
-    setLoading(true);
-    const data = await jobController.getJobs(filters);
-    setJobs(data);
-    setLoading(false);
-  };
+	const fetchJobs = async () => {
+		setLoading(true);
+		const response = await jobController.getJobs(filters);
+		// Handle both paginated and non-paginated responses
+		if (response.results) {
+			setJobs(response.results);
+			setTotalCount(response.count || response.results.length);
+		} else {
+			setJobs(response);
+			setTotalCount(response.length);
+		}
+		setLoading(false);
+	};
 
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-  };
+	const handleFilterChange = (key, value) => {
+		setFilters((prev) => ({ ...prev, [key]: value }));
+	};
 
-  return (
-    <DashboardLayout>
-      <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
-        {/* Search Header */}
-        <div className="sticky top-0 z-10 bg-white dark:bg-[#192430] border-b border-gray-200 dark:border-gray-700 p-4 shadow-sm">
-          <div className="max-w-5xl mx-auto w-full">
-            <div className="flex flex-col md:flex-row gap-4 items-center">
-              <div className="relative flex-1 w-full">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400">search</span>
-                <input 
-                  type="text" 
-                  placeholder="Search jobs by title, skill, or keyword..." 
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all"
-                  value={filters.search}
-                  onChange={(e) => handleFilterChange('search', e.target.value)}
-                />
-              </div>
-              <button className="hidden md:flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors">
-                Search
-              </button>
-            </div>
-            
-            {/* Advanced Filters */}
-            <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <select 
-                        className="w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-primary/20 outline-none"
-                        value={filters.category}
-                        onChange={(e) => handleFilterChange('category', e.target.value)}
-                    >
-                        <option value="All">All Categories</option>
-                        <option value="Development">Development</option>
-                        <option value="Design">Design</option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="Writing">Writing</option>
-                        <option value="Admin">Admin</option>
-                    </select>
+	return (
+		<DashboardLayout>
+			<div className='flex flex-col min-h-screen bg-background-light dark:bg-background-dark'>
+				{/* Search Header */}
+				<div className='sticky top-0 z-10 bg-white dark:bg-[#192430] border-b border-gray-200 dark:border-gray-700 p-4 shadow-sm'>
+					<div className='max-w-5xl mx-auto w-full'>
+						<div className='flex flex-col md:flex-row gap-4 items-center'>
+							<div className='relative flex-1 w-full'>
+								<span className='absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400'>
+									search
+								</span>
+								<input
+									type='text'
+									placeholder='Search jobs by title, skill, or keyword...'
+									className='w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all'
+									value={filters.search}
+									onChange={(e) =>
+										handleFilterChange(
+											"search",
+											e.target.value
+										)
+									}
+								/>
+							</div>
+							<button className='hidden md:flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors'>
+								Search
+							</button>
+						</div>
 
-                    <select 
-                        className="w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-primary/20 outline-none"
-                        value={filters.type}
-                        onChange={(e) => handleFilterChange('type', e.target.value)}
-                    >
-                        <option value="All">All Job Types</option>
-                        <option value="Full-time">Full-time</option>
-                        <option value="Part-time">Part-time</option>
-                        <option value="Contract">Contract</option>
-                        <option value="Freelance">Freelance</option>
-                    </select>
+						{/* Advanced Filters */}
+						<div className='mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700'>
+							<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+								<select
+									className='w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-primary/20 outline-none'
+									value={filters.category}
+									onChange={(e) =>
+										handleFilterChange(
+											"category",
+											e.target.value
+										)
+									}
+								>
+									<option value='All'>All Categories</option>
+									<option value='Development'>
+										Development
+									</option>
+									<option value='Design'>Design</option>
+									<option value='Marketing'>Marketing</option>
+									<option value='Writing'>Writing</option>
+									<option value='Admin'>Admin</option>
+								</select>
 
-                    <div className="flex gap-2 items-center">
-                        <input 
-                            type="number" 
-                            placeholder="Min $" 
-                            className="w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none"
-                            value={filters.minBudget}
-                            onChange={(e) => handleFilterChange('minBudget', e.target.value)}
-                        />
-                        <span className="text-gray-400">-</span>
-                        <input 
-                            type="number" 
-                            placeholder="Max $" 
-                            className="w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none"
-                            value={filters.maxBudget || ''}
-                            onChange={(e) => handleFilterChange('maxBudget', e.target.value)}
-                        />
-                    </div>
+								<select
+									className='w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-primary/20 outline-none'
+									value={filters.type}
+									onChange={(e) =>
+										handleFilterChange(
+											"type",
+											e.target.value
+										)
+									}
+								>
+									<option value='All'>All Job Types</option>
+									<option value='Full-time'>Full-time</option>
+									<option value='Part-time'>Part-time</option>
+									<option value='Contract'>Contract</option>
+									<option value='Freelance'>Freelance</option>
+								</select>
 
-                    <div className="flex gap-2 items-center">
-                         <div className="relative w-full">
-                            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none">After</span>
-                            <input 
-                                type="date" 
-                                className="w-full pl-10 pr-2 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none"
-                                value={filters.postedAfter || ''}
-                                onChange={(e) => handleFilterChange('postedAfter', e.target.value)}
-                            />
-                        </div>
-                        <div className="relative w-full">
-                            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none">Before</span>
-                            <input 
-                                type="date" 
-                                className="w-full pl-10 pr-2 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none"
-                                value={filters.postedBefore || ''}
-                                onChange={(e) => handleFilterChange('postedBefore', e.target.value)}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-          </div>
-        </div>
+								<div className='flex gap-2 items-center'>
+									<input
+										type='number'
+										placeholder='Min $'
+										className='w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none'
+										value={filters.minBudget}
+										onChange={(e) =>
+											handleFilterChange(
+												"minBudget",
+												e.target.value
+											)
+										}
+									/>
+									<span className='text-gray-400'>-</span>
+									<input
+										type='number'
+										placeholder='Max $'
+										className='w-full px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none'
+										value={filters.maxBudget || ""}
+										onChange={(e) =>
+											handleFilterChange(
+												"maxBudget",
+												e.target.value
+											)
+										}
+									/>
+								</div>
 
-        {/* Job List */}
-        <div className="flex-1 p-4 md:p-8 max-w-5xl mx-auto w-full">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              {loading ? 'Searching...' : `${jobs.length} Jobs Found`}
-            </h2>
-            <span className="text-sm text-gray-500 dark:text-gray-400">Sort by: Newest</span>
-          </div>
+								<div className='flex gap-2 items-center'>
+									<div className='relative w-full'>
+										<span className='absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none'>
+											After
+										</span>
+										<input
+											type='date'
+											className='w-full pl-10 pr-2 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none'
+											value={filters.postedAfter || ""}
+											onChange={(e) =>
+												handleFilterChange(
+													"postedAfter",
+													e.target.value
+												)
+											}
+										/>
+									</div>
+									<div className='relative w-full'>
+										<span className='absolute left-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none'>
+											Before
+										</span>
+										<input
+											type='date'
+											className='w-full pl-10 pr-2 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none'
+											value={filters.postedBefore || ""}
+											onChange={(e) =>
+												handleFilterChange(
+													"postedBefore",
+													e.target.value
+												)
+											}
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-          {loading ? (
-             <div className="space-y-4">
-                {[1, 2, 3].map(i => (
-                    <div key={i} className="animate-pulse bg-white dark:bg-[#192430] p-6 rounded-xl border border-gray-200 dark:border-gray-700 h-40"></div>
-                ))}
-             </div>
-          ) : jobs.length > 0 ? (
-            <div className="grid gap-4">
-              {jobs.map((job) => (
-                <Link href={`/jobs/${job.id}`} key={job.id} className="group block">
-                  <div className="bg-white dark:bg-[#192430] p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-primary/50 hover:shadow-md transition-all relative overflow-hidden">
-                    {job.featured && (
-                        <div className="absolute top-0 right-0 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-bl-lg">
-                            FEATURED
-                        </div>
-                    )}
-                    <div className="flex flex-col md:flex-row gap-4 items-start">
-                       <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                             <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
-                                {job.title}
-                             </h3>
-                             <span className="text-xs text-gray-500 dark:text-gray-400">• {job.postedTime}</span>
-                          </div>
-                          <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-3">
-                             {job.budgetType} - <span className="text-gray-900 dark:text-white font-bold">${job.budget}</span> - {job.type}
-                          </p>
-                          <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-4">
-                             {job.description}
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                             {job.tags.map(tag => (
-                                <span key={tag} className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs rounded-full font-medium">
-                                   {tag}
-                                </span>
-                             ))}
-                          </div>
-                       </div>
-                       <div className="flex flex-col items-end gap-2 min-w-[120px]">
-                          <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-                             <span className="material-symbols-outlined text-base">verified</span>
-                             Payment Verified
-                          </div>
-                          <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-                             <span className="material-symbols-outlined text-base">location_on</span>
-                             {job.location}
-                          </div>
-                          <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-                             <span className="material-symbols-outlined text-base">description</span>
-                             {job.proposals} Proposals
-                          </div>
-                       </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-20">
-               <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mb-4">search_off</span>
-               <h3 className="text-xl font-bold text-gray-900 dark:text-white">No jobs found</h3>
-               <p className="text-gray-500 dark:text-gray-400">Try adjusting your search filters.</p>
-            </div>
-          )}
-        </div>
-      </div>
-    </DashboardLayout>
-  );
+				{/* Job List */}
+				<div className='flex-1 p-4 md:p-8 max-w-5xl mx-auto w-full'>
+					<div className='flex justify-between items-center mb-6'>
+						<h2 className='text-xl font-bold text-gray-900 dark:text-white'>
+							{loading
+								? "Searching..."
+								: `${totalCount} Jobs Found`}
+						</h2>
+						<span className='text-sm text-gray-500 dark:text-gray-400'>
+							Sort by: Newest
+						</span>
+					</div>
+
+					{loading ? (
+						<div className='space-y-4'>
+							{[1, 2, 3].map((i) => (
+								<div
+									key={i}
+									className='animate-pulse bg-white dark:bg-[#192430] p-6 rounded-xl border border-gray-200 dark:border-gray-700 h-40'
+								></div>
+							))}
+						</div>
+					) : jobs.length > 0 ? (
+						<div className='grid gap-4'>
+							{jobs.map((job) => (
+								<Link
+									href={`/jobs/${job.id}`}
+									key={job.id}
+									className='group block'
+								>
+									<div className='bg-white dark:bg-[#192430] p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-primary/50 hover:shadow-md transition-all relative overflow-hidden'>
+										{job.featured && (
+											<div className='absolute top-0 right-0 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-bl-lg'>
+												FEATURED
+											</div>
+										)}
+										<div className='flex flex-col md:flex-row gap-4 items-start'>
+											<div className='flex-1'>
+												<div className='flex items-center gap-2 mb-1'>
+													<h3 className='text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors'>
+														{job.title}
+													</h3>
+													<span className='text-xs text-gray-500 dark:text-gray-400'>
+														• {job.postedTime}
+													</span>
+												</div>
+												<p className='text-sm font-medium text-gray-600 dark:text-gray-300 mb-3'>
+													{job.budgetType} -{" "}
+													<span className='text-gray-900 dark:text-white font-bold'>
+														${job.budget}
+													</span>{" "}
+													- {job.type}
+												</p>
+												<p className='text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-4'>
+													{job.description}
+												</p>
+												<div className='flex flex-wrap gap-2'>
+													{job.tags.map((tag) => (
+														<span
+															key={tag}
+															className='px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs rounded-full font-medium'
+														>
+															{tag}
+														</span>
+													))}
+												</div>
+											</div>
+											<div className='flex flex-col items-end gap-2 min-w-[120px]'>
+												<div className='flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400'>
+													<span className='material-symbols-outlined text-base'>
+														verified
+													</span>
+													Payment Verified
+												</div>
+												<div className='flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400'>
+													<span className='material-symbols-outlined text-base'>
+														location_on
+													</span>
+													{job.location}
+												</div>
+												<div className='flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400'>
+													<span className='material-symbols-outlined text-base'>
+														description
+													</span>
+													{job.proposals} Proposals
+												</div>
+											</div>
+										</div>
+									</div>
+								</Link>
+							))}
+						</div>
+					) : (
+						<div className='text-center py-20'>
+							<span className='material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mb-4'>
+								search_off
+							</span>
+							<h3 className='text-xl font-bold text-gray-900 dark:text-white'>
+								No jobs found
+							</h3>
+							<p className='text-gray-500 dark:text-gray-400'>
+								Try adjusting your search filters.
+							</p>
+						</div>
+					)}
+				</div>
+			</div>
+		</DashboardLayout>
+	);
 }
