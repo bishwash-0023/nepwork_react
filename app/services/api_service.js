@@ -2,7 +2,7 @@ import axios from "axios";
 import BackendResponse from "./backend_response.js";
 
 // Define your base URL and endpoints
-const API_BASE_URL = "http://localhost:3000/api"; // Change this to your actual base URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const axiosInstance = axios.create({
 	baseURL: API_BASE_URL,
@@ -22,13 +22,25 @@ class ApiService {
 	}
 
 	/**
-	 * Get the API access token
+	 * Get the API access token from cookies
 	 * @returns {string|null}
 	 */
 	getApiAccessToken() {
 		try {
-			// Replace with your actual auth token retrieval logic
-			return localStorage.getItem("authToken") || null;
+			if (typeof document === "undefined") return null;
+
+			const name = "nepwork_access_token=";
+			const decodedCookie = document.cookie;
+			const ca = decodedCookie.split(";");
+
+			for (let i = 0; i < ca.length; i++) {
+				let c = ca[i];
+				while (c.charAt(0) === " ") c = c.substring(1);
+				if (c.indexOf(name) === 0) {
+					return c.substring(name.length, c.length);
+				}
+			}
+			return null;
 		} catch (e) {
 			return null;
 		}

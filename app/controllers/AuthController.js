@@ -1,162 +1,196 @@
-import api, { setTokens, clearTokens, getToken } from "@/app/services/api";
-
-const USER_KEY = "nepwork_user";
-
-// Helper to transform user data from backend
-function transformUser(data) {
-	return {
-		id: data.id,
-		email: data.email,
-		name:
-			data.full_name ||
-			`${data.first_name || ""} ${data.last_name || ""}`.trim(),
-		firstName: data.first_name,
-		lastName: data.last_name,
-		role: data.role,
-		avatar: data.avatar,
-		bio: data.bio,
-		location: data.location,
-		title: data.title,
-		skills: data.skills || [],
-		hourlyRate: data.hourly_rate,
-		onboardingCompleted: data.onboarding_completed,
-		dateJoined: data.date_joined,
-	};
-}
-
-// Store/retrieve user from localStorage
-function getStoredUser() {
-	if (typeof window === "undefined") return null;
-	const data = localStorage.getItem(USER_KEY);
-	return data ? JSON.parse(data) : null;
-}
-
-function storeUser(user) {
-	if (typeof window !== "undefined") {
-		localStorage.setItem(USER_KEY, JSON.stringify(user));
-	}
-}
-
-function clearUser() {
-	if (typeof window !== "undefined") {
-		localStorage.removeItem(USER_KEY);
-	}
-}
+import AuthService from "@/app/services/auth/auth_service";
+import BackendResponse from "@/app/services/backend_response";
 
 export const authController = {
-	// Login
+	/**
+	 * Login with email and password
+	 * Uses new backend endpoint: POST /auth/login/
+	 * @param {string} email
+	 * @param {string} password
+	 * @returns {Promise<{ success: boolean, user?: Object, message?: string }>}
+	 */
 	async login(email, password) {
-		try {
-			const { data: tokens } = await api.post("/auth/jwt/create/", {
-				email,
-				password,
-			});
-			setTokens(tokens.access, tokens.refresh);
-			const user = await this.fetchCurrentUser();
-			return { success: true, user };
-		} catch (error) {
+		const loginResponse = await AuthService.login(email, password);
+
+		if (!loginResponse.success) {
 			return {
 				success: false,
-				message: error.response?.data?.detail || "Invalid credentials",
+				message: loginResponse.error?.message || "Invalid credentials",
 			};
 		}
-	},
 
-	// Signup
-	async signup({ email, password, firstName, lastName, role }) {
-		try {
-			await api.post("/auth/users/", {
-				email,
-				password,
-				first_name: firstName || "",
-				last_name: lastName || "",
-				role: role === "hire" ? "client" : "freelancer",
-			});
-			return await this.login(email, password);
-		} catch (error) {
+		// The new backend returns user data along with tokens
+		// Response format: { tokens: { access, refresh }, user: {...} }
+		if (loginResponse.response?.user) {
+			return {
+				success: true,
+				user: AuthService.transformUser(loginResponse.response.user),
+			};
+		}
+
+		// Fallback: fetch user profile if not included in login response
+		const userResponse = await AuthService.fetchCurrentUser();
+
+		if (!userResponse.success) {
 			return {
 				success: false,
-				message:
-					error.response?.data?.email?.[0] ||
-					error.response?.data?.detail ||
-					"Signup failed",
+				message: "Login successful but failed to fetch user profile",
 			};
 		}
+
+		return {
+			success: true,
+			user: AuthService.transformUser(userResponse.response),
+		};
 	},
 
-	// Fetch current user
+	/**
+	 * Register a new user
+	 * Uses new backend endpoint: POST /auth/signup/
+	 * @param {Object} params - { email, password, passwordConfirm, fullName, phoneNumber, address }
+	 * @returns {Promise<{ success: boolean, user?: Object, message?: string }>}
+	 */
+	async signup({
+		email,
+		password,
+		passwordConfirm,
+		fullName,
+		phoneNumber,
+		address,
+	}) {
+		const signupResponse = await AuthService.signup({
+			email,
+			password,
+			passwordConfirm: passwordConfirm || password,
+			fullName,
+			phoneNumber,
+			address,
+		});
+
+		if (!signupResponse.success) {
+			// Handle specific error messages from backend
+			const errorData = signupResponse.error?.details;
+			let message = signupResponse.error?.message || "Signup failed";
+
+			// Check for specific field errors
+			if (errorData?.email?.[0]) {
+				message = errorData.email[0];
+			} else if (errorData?.password?.[0]) {
+				message = errorData.password[0];
+			} else if (errorData?.password_confirm?.[0]) {
+				message = errorData.password_confirm[0];
+			}
+
+			return { success: false, message };
+		}
+
+		// Auto-login after successful signup
+		return await this.login(email, password);
+	},
+
+	/**
+	 * Fetch current user profile
+	 * @returns {Promise<Object|null>}
+	 */
 	async fetchCurrentUser() {
-		try {
-			const { data } = await api.get("/api/users/me/");
-			const user = transformUser(data);
-			storeUser(user);
-			return user;
-		} catch {
+		const response = await AuthService.fetchCurrentUser();
+
+		if (!response.success) {
 			return null;
 		}
+
+		return AuthService.transformUser(response.response);
 	},
 
-	// Complete onboarding
+	/**
+	 * Complete user onboarding
+	 * @param {Object} details - { bio, location, title, skills, hourlyRate }
+	 * @returns {Promise<{ success: boolean, user?: Object, error?: string }>}
+	 */
 	async completeOnboarding(details) {
-		try {
-			const { data } = await api.patch("/api/users/me/", {
-				bio: details.bio,
-				location: details.location,
-				title: details.title,
-				skills: details.skills,
-				hourly_rate: details.hourlyRate,
-				onboarding_completed: true,
-			});
-			const user = transformUser(data);
-			storeUser(user);
-			return { success: true, user };
-		} catch (error) {
+		const response = await AuthService.completeOnboarding({
+			bio: details.bio,
+			location: details.location,
+			title: details.title,
+			skills: details.skills,
+			hourlyRate: details.hourlyRate,
+		});
+
+		if (!response.success) {
 			return {
 				success: false,
-				error: error.response?.data?.detail || "Update failed",
+				error:
+					response.error?.message || "Failed to complete onboarding",
 			};
 		}
+
+		return {
+			success: true,
+			user: AuthService.transformUser(response.response),
+		};
 	},
 
-	// Update profile
+	/**
+	 * Update user profile
+	 * @param {Object} updates
+	 * @returns {Promise<{ success: boolean, user?: Object, error?: string }>}
+	 */
 	async updateProfile(updates) {
-		try {
-			const payload = {};
-			if (updates.firstName !== undefined)
-				payload.first_name = updates.firstName;
-			if (updates.lastName !== undefined)
-				payload.last_name = updates.lastName;
-			if (updates.bio !== undefined) payload.bio = updates.bio;
-			if (updates.location !== undefined)
-				payload.location = updates.location;
-			if (updates.title !== undefined) payload.title = updates.title;
-			if (updates.skills !== undefined) payload.skills = updates.skills;
-			if (updates.hourlyRate !== undefined)
-				payload.hourly_rate = updates.hourlyRate;
-			if (updates.avatar !== undefined) payload.avatar = updates.avatar;
+		const response = await AuthService.updateProfile(updates);
 
-			const { data } = await api.patch("/api/users/me/", payload);
-			const user = transformUser(data);
-			storeUser(user);
-			return { success: true, user };
-		} catch (error) {
+		if (!response.success) {
 			return {
 				success: false,
-				error: error.response?.data?.detail || "Update failed",
+				error: response.error?.message || "Update failed",
 			};
+		}
+
+		return {
+			success: true,
+			user: AuthService.transformUser(response.response),
+		};
+	},
+
+	/**
+	 * Refresh access token
+	 * @returns {Promise<boolean>}
+	 */
+	async refreshToken() {
+		const response = await AuthService.refreshToken();
+		return response.success;
+	},
+
+	/**
+	 * Logout user
+	 */
+	logout() {
+		AuthService.logout();
+		if (typeof window !== "undefined") {
+			window.location.href = "/login";
 		}
 	},
 
-	// Logout
-	logout() {
-		clearTokens();
-		clearUser();
-		if (typeof window !== "undefined") window.location.href = "/login";
+	/**
+	 * Check if user is authenticated
+	 * @returns {boolean}
+	 */
+	isAuthenticated() {
+		return AuthService.isAuthenticated();
 	},
 
-	// Check auth status
-	isAuthenticated: () => !!getToken(),
+	/**
+	 * Get cached user from storage
+	 * @returns {Object|null}
+	 */
+	getUser() {
+		return AuthService.getStoredUser();
+	},
 
-	// Get cached user
-	getUser: getStoredUser,
+	/**
+	 * Get current access token
+	 * @returns {string|null}
+	 */
+	getToken() {
+		return AuthService.getAccessToken();
+	},
 };

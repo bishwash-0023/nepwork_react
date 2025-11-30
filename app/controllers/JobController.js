@@ -1,5 +1,18 @@
 import api from "@/app/services/api";
 
+/**
+ * JobController - Updated to match new backend API structure
+ *
+ * Endpoints (from z_readmes/jobs.md):
+ * - POST /jobs/new - Create a new job
+ * - GET /jobs/list - List all jobs with filtering
+ * - GET /jobs/detail/{id}/ - Get job details
+ * - PUT/PATCH /jobs/update/{id}/ - Update a job
+ * - DELETE /jobs/delete/{id}/ - Delete a job
+ * - GET /jobs/mine/ - List jobs created by current user
+ * - GET /jobs/hired/ - List jobs where current user is hired
+ */
+
 // Helper: relative time
 const getRelativeTime = (dateString) => {
 	if (!dateString) return "";
@@ -13,117 +26,170 @@ const getRelativeTime = (dateString) => {
 	return `${Math.floor(days / 7)}w ago`;
 };
 
-// Helper: transform job data
+// Helper: transform job data to match new backend response format
 const transformJob = (job) => ({
 	id: job.id,
 	title: job.title,
 	description: job.description,
-	category: job.category,
-	type: job.type,
-	budget: parseFloat(job.budget) || 0,
-	budgetType: job.budget_type === "hourly" ? "Hourly" : "Fixed Price",
-	requirements: job.requirements || [],
-	tags: job.tags || [],
-	skills: job.skills || job.tags || [],
-	status: job.status,
+	status: job.status, // open, in_progress, closed
 	createdAt: job.created_at,
+	updatedAt: job.updated_at,
 	postedTime: getRelativeTime(job.created_at),
-	proposals: job.proposal_count || 0,
-	posterId: job.poster?.id,
-	posterName: job.poster_name || job.poster?.full_name || "Unknown",
-	posterAvatar: job.poster?.avatar,
-	company: job.poster_name || job.poster?.full_name || "Unknown",
-	location: job.poster?.location || "Remote",
-});
-
-// Helper: transform proposal data
-const transformProposal = (p, jobId) => ({
-	id: p.id,
-	jobId: jobId || p.job?.id,
-	jobTitle: p.job_title || p.job?.title,
-	freelancerId: p.freelancer?.id,
-	freelancerName: p.freelancer_name || p.freelancer?.full_name,
-	freelancerAvatar: p.freelancer_avatar || p.freelancer?.avatar,
-	bidAmount: parseFloat(p.bid_amount) || 0,
-	coverLetter: p.cover_letter,
-	status: p.status,
-	createdAt: p.created_at,
-	rating: p.freelancer?.rating,
-	skills: p.freelancer?.skills || [],
+	// Creator info (new backend structure)
+	createdBy: job.created_by,
+	posterId: job.created_by?.id,
+	posterName: job.created_by?.full_name || job.created_by?.email || "Unknown",
+	posterEmail: job.created_by?.email,
+	// Hired user info
+	hiredTo: job.hired_to,
+	hiredToId: job.hired_to?.id,
+	hiredToName: job.hired_to?.full_name || job.hired_to?.email,
+	// Media attachments
+	images: job.images || [],
+	files: job.files || [],
 });
 
 export const jobController = {
-	// Get all jobs
+	/**
+	 * Get all jobs with filtering and pagination
+	 * NEW ENDPOINT: GET /jobs/list
+	 * Query params: status, created_by, search, ordering, page
+	 */
 	async getJobs(filters = {}) {
 		try {
 			const params = {};
-			if (filters.category && filters.category !== "All")
-				params.category = filters.category.toLowerCase();
-			if (filters.type && filters.type !== "All")
-				params.type = filters.type.toLowerCase().replace("-", "_");
+			if (filters.status && filters.status !== "All")
+				params.status = filters.status.toLowerCase();
+			if (filters.created_by) params.created_by = filters.created_by;
 			if (filters.search) params.search = filters.search;
+			if (filters.ordering) params.ordering = filters.ordering;
 			if (filters.page) params.page = filters.page;
 
-			const { data } = await api.get("/api/jobs/", { params });
+			const { data } = await api.get("/jobs/list", { params });
 			const jobs = data.results || data;
 			return {
 				count: data.count || jobs.length,
-				results: jobs.map(transformJob),
+				next: data.next,
+				previous: data.previous,
+				results: Array.isArray(jobs) ? jobs.map(transformJob) : [],
 			};
-		} catch {
-			return { count: 0, results: [] };
+		} catch (error) {
+			console.error("Error fetching jobs:", error);
+			return { count: 0, results: [], next: null, previous: null };
 		}
 	},
 
-	// Get single job
+	/**
+	 * Get single job details
+	 * NEW ENDPOINT: GET /jobs/detail/{id}/
+	 */
 	async getJob(id) {
 		try {
-			const { data } = await api.get(`/api/jobs/${id}/`);
+			const { data } = await api.get(`/jobs/detail/${id}/`);
 			return transformJob(data);
-		} catch {
+		} catch (error) {
+			console.error("Error fetching job:", error);
 			return null;
 		}
 	},
 
-	// Get my jobs
+	/**
+	 * Get jobs created by the current user
+	 * NEW ENDPOINT: GET /jobs/mine/
+	 */
 	async getMyJobs() {
 		try {
-			const { data } = await api.get("/api/jobs/my_jobs/");
-			return (data.results || data).map(transformJob);
-		} catch {
+			const { data } = await api.get("/jobs/mine/");
+			const jobs = data.results || data;
+			return Array.isArray(jobs) ? jobs.map(transformJob) : [];
+		} catch (error) {
+			console.error("Error fetching my jobs:", error);
 			return [];
 		}
 	},
 
-	// Post new job
+	/**
+	 * Get jobs where the current user is hired
+	 * NEW ENDPOINT: GET /jobs/hired/
+	 */
+	async getHiredJobs() {
+		try {
+			const { data } = await api.get("/jobs/hired/");
+			const jobs = data.results || data;
+			return Array.isArray(jobs) ? jobs.map(transformJob) : [];
+		} catch (error) {
+			console.error("Error fetching hired jobs:", error);
+			return [];
+		}
+	},
+
+	/**
+	 * Create a new job
+	 * NEW ENDPOINT: POST /jobs/new
+	 * Supports multipart/form-data for image/file uploads
+	 */
 	async postJob(jobData) {
 		try {
-			const { data } = await api.post("/api/jobs/", {
-				title: jobData.title,
-				description: jobData.description,
-				category: jobData.category?.toLowerCase() || "development",
-				type: jobData.jobType || jobData.type || "freelance",
-				budget: String(jobData.budget),
-				budget_type:
-					jobData.budgetType === "hourly" ? "hourly" : "fixed",
-				requirements: jobData.requirements || "",
-				skills: jobData.skills || [],
+			const formData = new FormData();
+
+			// Required fields
+			formData.append("title", jobData.title);
+			formData.append("description", jobData.description);
+
+			// Handle image uploads if any
+			if (jobData.images && jobData.images.length > 0) {
+				jobData.images.forEach((image) => {
+					if (image instanceof File) {
+						formData.append("images", image);
+					}
+				});
+			}
+
+			// Handle file uploads if any
+			if (jobData.files && jobData.files.length > 0) {
+				jobData.files.forEach((file) => {
+					if (file instanceof File) {
+						formData.append("files", file);
+					}
+				});
+			}
+
+			const { data } = await api.post("/jobs/new", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
 			});
 			return { success: true, job: transformJob(data) };
 		} catch (error) {
+			console.error("Error posting job:", error);
 			return {
 				success: false,
-				error: error.response?.data?.detail || "Failed to post job",
+				error:
+					error.response?.data?.detail ||
+					error.response?.data?.message ||
+					"Failed to post job",
 			};
 		}
 	},
 
-	// Update job
+	/**
+	 * Update an existing job
+	 * NEW ENDPOINT: PATCH /jobs/update/{id}/
+	 */
 	async updateJob(id, updates) {
 		try {
-			const { data } = await api.patch(`/api/jobs/${id}/`, updates);
+			const payload = {};
+			if (updates.title !== undefined) payload.title = updates.title;
+			if (updates.description !== undefined)
+				payload.description = updates.description;
+			if (updates.status !== undefined) payload.status = updates.status;
+			if (updates.hired_to_id !== undefined)
+				payload.hired_to_id = updates.hired_to_id;
+
+			const { data } = await api.patch(`/jobs/update/${id}/`, payload);
 			return { success: true, job: transformJob(data) };
 		} catch (error) {
+			console.error("Error updating job:", error);
 			return {
 				success: false,
 				error: error.response?.data?.detail || "Update failed",
@@ -131,12 +197,16 @@ export const jobController = {
 		}
 	},
 
-	// Delete job
+	/**
+	 * Delete a job
+	 * NEW ENDPOINT: DELETE /jobs/delete/{id}/
+	 */
 	async deleteJob(id) {
 		try {
-			await api.delete(`/api/jobs/${id}/`);
+			await api.delete(`/jobs/delete/${id}/`);
 			return { success: true };
 		} catch (error) {
+			console.error("Error deleting job:", error);
 			return {
 				success: false,
 				error: error.response?.data?.detail || "Delete failed",
@@ -144,59 +214,40 @@ export const jobController = {
 		}
 	},
 
-	// Get proposals for a job
-	async getProposals(jobId) {
+	/**
+	 * Hire a user for a job (updates job status and sets hired_to)
+	 * Note: This is typically done through accepting a bid via BidController
+	 */
+	async hireUser(jobId, userId) {
 		try {
-			const { data } = await api.get(`/api/jobs/${jobId}/proposals/`);
-			return (data.results || data).map((p) =>
-				transformProposal(p, jobId)
-			);
-		} catch {
-			return [];
-		}
-	},
-
-	// Get my proposals (freelancer)
-	async getMyProposals() {
-		try {
-			const { data } = await api.get("/api/proposals/");
-			return (data.results || data).map((p) => transformProposal(p));
-		} catch {
-			return [];
-		}
-	},
-
-	// Apply for job
-	async applyForJob(jobId, { coverLetter, bidAmount }) {
-		try {
-			const { data } = await api.post(`/api/jobs/${jobId}/apply/`, {
-				cover_letter: coverLetter,
-				bid_amount: String(bidAmount),
+			const { data } = await api.patch(`/jobs/update/${jobId}/`, {
+				hired_to_id: userId,
+				status: "in_progress",
 			});
-			return {
-				success: true,
-				application: transformProposal(data, jobId),
-			};
+			return { success: true, job: transformJob(data) };
 		} catch (error) {
+			console.error("Error hiring user:", error);
 			return {
 				success: false,
-				error: error.response?.data?.detail || "Application failed",
+				error: error.response?.data?.detail || "Failed to hire user",
 			};
 		}
 	},
 
-	// Update proposal status
-	async updateProposalStatus(jobId, proposalId, status) {
+	/**
+	 * Close a job (mark as completed)
+	 */
+	async closeJob(jobId) {
 		try {
-			const { data } = await api.patch(
-				`/api/jobs/${jobId}/proposals/${proposalId}/update_status/`,
-				{ status }
-			);
-			return { success: true, proposal: data };
+			const { data } = await api.patch(`/jobs/update/${jobId}/`, {
+				status: "closed",
+			});
+			return { success: true, job: transformJob(data) };
 		} catch (error) {
+			console.error("Error closing job:", error);
 			return {
 				success: false,
-				error: error.response?.data?.detail || "Status update failed",
+				error: error.response?.data?.detail || "Failed to close job",
 			};
 		}
 	},

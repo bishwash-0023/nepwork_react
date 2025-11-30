@@ -105,7 +105,59 @@ class BackendResponse {
 	}
 
 	toString() {
-		return this.deepDetails;
+		return this.deepDetails();
+	}
+
+	/**
+	 * Checks if data is already wrapped in the standard structure
+	 * @param {*} data
+	 * @returns {boolean}
+	 */
+	static _isAlreadyWrapped(data) {
+		if (typeof data !== "object" || data === null) {
+			return false;
+		}
+		return "success" in data && ("response" in data || "error" in data);
+	}
+
+	/**
+	 * Wraps raw response data into the standard structure
+	 * @param {*} data - Raw response data
+	 * @param {number} statusCode - HTTP status code
+	 * @returns {{ success: boolean, response: *, error: Object|null }}
+	 */
+	static _wrapResponseData(data, statusCode) {
+		// If already wrapped, return as-is
+		if (BackendResponse._isAlreadyWrapped(data)) {
+			return data;
+		}
+
+		const isSuccess = statusCode >= 200 && statusCode < 300;
+
+		if (isSuccess) {
+			return {
+				success: true,
+				response: data ?? {},
+				error: null,
+			};
+		}
+
+		// Build error structure
+		let message = "";
+		let details = null;
+
+		if (typeof data === "object" && data !== null) {
+			message = data.detail || data.message || "An error occurred";
+			details = data;
+		} else {
+			message = String(data);
+		}
+
+		return {
+			success: false,
+			response: null,
+			error: { message, details },
+		};
 	}
 
 	/**
@@ -113,23 +165,56 @@ class BackendResponse {
 	 * @returns {BackendResponse}
 	 */
 	static fromAxiosResponse(axiosResp) {
-		const data = axiosResp.data;
+		const statusCode = axiosResp.status;
+		const rawData = axiosResp.data;
 
-		if (typeof data !== "object" || data === null) {
+		// Wrap the response data client-side
+		const wrappedData = BackendResponse._wrapResponseData(
+			rawData,
+			statusCode
+		);
+
+		return new BackendResponse({
+			success: wrappedData.success,
+			response: wrappedData.response,
+			error: wrappedData.error,
+			axiosResponse: axiosResp,
+		});
+	}
+
+	/**
+	 * Creates BackendResponse from an Axios error (e.g., network error or non-2xx response)
+	 * @param {import('axios').AxiosError} axiosError
+	 * @returns {BackendResponse}
+	 */
+	static fromAxiosError(axiosError) {
+		// If there's a response (e.g., 4xx, 5xx), wrap it
+		if (axiosError.response) {
+			const statusCode = axiosError.response.status;
+			const rawData = axiosError.response.data;
+
+			const wrappedData = BackendResponse._wrapResponseData(
+				rawData,
+				statusCode
+			);
+
 			return new BackendResponse({
 				success: false,
-				error: { message: "Invalid response format", details: data },
-				axiosResponse: axiosResp,
+				response: wrappedData.response,
+				error: wrappedData.error,
+				axiosResponse: axiosError.response,
 			});
 		}
 
-		const isSuccess = data.success === true;
-
+		// No response (network error, timeout, etc.)
 		return new BackendResponse({
-			success: isSuccess,
-			response: data.response,
-			error: isSuccess ? null : data.error,
-			axiosResponse: axiosResp,
+			success: false,
+			response: null,
+			error: {
+				message: axiosError.message || "Network error",
+				details: { code: axiosError.code, name: axiosError.name },
+			},
+			axiosResponse: null,
 		});
 	}
 
@@ -162,11 +247,9 @@ class BackendResponse {
 		}
 
 		try {
-			const data = this.axiosResponse.data;
+			const data = this.response;
 			if (typeof data === "object" && data !== null) {
-				return UserInfoClass.fromJson(
-					this.response ?? data.response ?? data
-				);
+				return UserInfoClass.fromJson(data);
 			}
 		} catch (e) {
 			console.error(
